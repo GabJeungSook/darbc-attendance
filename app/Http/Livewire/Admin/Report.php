@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Admin;
 
+use Excel;
 use App\Models\Event;
 use Livewire\Component;
 use App\Models\Attendance;
@@ -27,6 +28,13 @@ class Report extends Component
         }else{
             $this->event = Event::find($value);
         }
+    }
+
+    public function exportReport()
+    {
+        return Excel::download(
+            new \App\Exports\AttendanceExport($this->selected_event),
+            'attendance.xlsx');
     }
 
     public function render()

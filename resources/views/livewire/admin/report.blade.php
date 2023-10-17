@@ -21,8 +21,8 @@
              <div class="mt-5 flex space-x-2 ">
         <x-button label="PRINT" sm dark icon="printer" class="font-bold"
           @click="printOut($refs.printContainer.outerHTML);" />
-        <x-button label="EXPORT" sm positive wire:click="exportReport({{ $report_get }})"
-          spinner="exportReport({{ $report_get }})" icon="document-text" class="font-bold" />
+        <x-button label="EXPORT" sm positive wire:click="exportReport"
+          spinner="exportReport" icon="document-text" class="font-bold" />
       </div>
 
         </div>
