@@ -25,6 +25,18 @@ Route::get('/upload', function () {
     return view('admin.upload');
 })->middleware(['auth', 'verified'])->name('upload');
 
+Route::get('/event', function () {
+    return view('admin.event');
+})->middleware(['auth', 'verified'])->name('event');
+
+Route::get('/members', function () {
+    return view('admin.member');
+})->middleware(['auth', 'verified'])->name('members');
+
+Route::get('/attendance', function () {
+    return view('admin.attendance');
+})->middleware(['auth', 'verified'])->name('attendance');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
