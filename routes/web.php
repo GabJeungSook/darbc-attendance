@@ -23,15 +23,19 @@ Route::get('/dashboard', function () {
 
 Route::get('/upload', function () {
     return view('admin.upload');
-})->middleware(['auth', 'verified'])->name('upload');
+})->middleware(['auth', 'verified', 'role:admin'])->name('upload');
 
 Route::get('/event', function () {
     return view('admin.event');
-})->middleware(['auth', 'verified'])->name('event');
+})->middleware(['auth', 'verified', 'role:admin'])->name('event');
+
+Route::get('/accounts', function () {
+    return view('admin.accounts');
+})->middleware(['auth', 'verified', 'role:admin'])->name('accounts');
 
 Route::get('/members', function () {
     return view('admin.member');
-})->middleware(['auth', 'verified'])->name('members');
+})->middleware(['auth', 'verified', 'role:admin'])->name('members');
 
 Route::get('/attendance', function () {
     return view('admin.attendance');
@@ -39,7 +43,7 @@ Route::get('/attendance', function () {
 
 Route::get('/report', function () {
     return view('admin.report');
-})->middleware(['auth', 'verified'])->name('report');
+})->middleware(['auth', 'verified', 'role:admin'])->name('report');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

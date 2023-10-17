@@ -22,6 +22,7 @@
           </div>
         </dl>
       </div>
+      @if(auth()->user()->role_id == 1)
       <div class="bg-gray-200 p-3 rounded-md mt-4">
         <div class="text-lg font-semibold tracking-wide mb-3">
             <h1>Daily Registration Count</h1>
@@ -56,6 +57,7 @@
             </div>
           </dl>
       </div>
+      @endif
       @else
       <div>
         <span class="inline-flex items-center gap-x-1.5 rounded-md bg-red-100 px-2 py-2 text-md font-semibold text-red-700">

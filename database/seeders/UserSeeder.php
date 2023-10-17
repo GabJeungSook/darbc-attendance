@@ -15,6 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
+            'role_id' => 1,
             'name' => 'DARBC Admin',
             'email' => 'darbcadmin@darbc.com',
             'username' => 'DARBCMEMBERSHIP',
