@@ -1,0 +1,19 @@
+@import '../../vendor/filament/forms/dist/module.esm.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] {
+    display: none !important;
+  }
+
+  .filament-tables-header-cell button {
+    @apply !text-white;
+    @apply !border-gray-100;
+  }
+
+  .filament-tables-table > thead tr {
+    @apply !bg-indigo-500;
+  }
+
