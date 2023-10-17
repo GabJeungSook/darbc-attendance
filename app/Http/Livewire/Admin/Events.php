@@ -81,6 +81,7 @@ class Events extends Component implements Tables\Contracts\HasTable
                     );
                 })
                 ->requiresConfirmation()
+                ->visible(fn ($record) => $record->event_status != 1),
                 ])
 
 
