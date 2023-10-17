@@ -14,9 +14,13 @@ class Dashboard extends Component
     public function mount()
     {
         $this->event = \App\Models\Event::where('event_status', 1)->first();
-        $this->total_members = \App\Models\Members::count();
-        $this->total_attendance = \App\Models\Attendance::where('event_id', $this->event->id)->count();
-        $this->total_absent = $this->total_members - $this->total_attendance;
+        if($this->event != null)
+        {
+            $this->total_members = \App\Models\Members::count();
+            $this->total_attendance = \App\Models\Attendance::where('event_id', $this->event->id)->count();
+            $this->total_absent = $this->total_members - $this->total_attendance;
+        }
+
 
     }
 

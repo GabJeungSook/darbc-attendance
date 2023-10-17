@@ -15,6 +15,7 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\TernaryFilter;
 use App\Models\Attendance as AttendanceModel;
@@ -38,23 +39,44 @@ class Attendance extends Component implements Tables\Contracts\HasTable
     protected function getTableFilters(): array
     {
         return [
-            TernaryFilter::make('attendance')
-            ->placeholder('All')
-            ->trueLabel('Attended')
-            ->falseLabel('Not Attended')
-            ->options([
-                'true' => 'Attended',
-                'false' => 'Not Attended',
+            Filter::make('attendance')
+            ->form([
+                Forms\Components\Select::make('status')
+                ->options([
+                        'true' => 'Attended',
+                        'false' => 'Not Attended',
+                    ])->default('false'),
+
             ])
-            ->queries(
-                true: fn (Builder $query) => $query->whereHas('attendances', function ($query) {
-                    $query->where('event_id', $this->event->id);
-                }),
-                false: fn (Builder $query) => $query->whereDoesntHave('attendances', function ($query) {
-                    $query->where('event_id', $this->event->id);
-                }),
-                blank: fn (Builder $query) => $query,
-            )
+            ->query(function (Builder $query, array $data): Builder {
+                if ($data['status'] == 'true') {
+                    $query->whereHas('attendances', function ($query) {
+                        $query->where('event_id', $this->event->id);
+                    });
+                } elseif ($data['status'] == 'false') {
+                    $query->whereDoesntHave('attendances', function ($query) {
+                        $query->where('event_id', $this->event->id);
+                    });
+                }
+                return $query;
+            }),
+            // TernaryFilter::make('attendance')
+            // ->placeholder('All')
+            // ->trueLabel('Attended')
+            // ->falseLabel('Not Attended')
+            // ->options([
+            //     'true' => 'Attended',
+            //     'false' => 'Not Attended',
+            // ])
+            // ->queries(
+            //     true: fn (Builder $query) => $query->whereHas('attendances', function ($query) {
+            //         $query->where('event_id', $this->event->id);
+            //     }),
+            //     false: fn (Builder $query) => $query->whereDoesntHave('attendances', function ($query) {
+            //         $query->where('event_id', $this->event->id);
+            //     }),
+            //     blank: fn (Builder $query) => $query,
+            // )
         ];
     }
 
