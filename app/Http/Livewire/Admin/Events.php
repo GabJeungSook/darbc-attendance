@@ -44,7 +44,7 @@ class Events extends Component implements Tables\Contracts\HasTable
             ->icon('heroicon-o-plus')
             ->form([
                 Forms\Components\TextInput::make('event_name')->label("Event Name")->required(),
-                Forms\Components\Datepicker::make('date_of_event')->label("Date")->required(),
+                Forms\Components\DatePicker::make('date_of_event')->label("Date")->required(),
             ])
             ->requiresConfirmation()
         ];
@@ -67,7 +67,7 @@ class Events extends Component implements Tables\Contracts\HasTable
                 })
                 ->form([
                     Forms\Components\TextInput::make('event_name')->label("Event Name")->required(),
-                    Forms\Components\Datepicker::make('date_of_event')->label("Date")->required(),
+                    Forms\Components\DatePicker::make('date_of_event')->label("Date")->required(),
                 ])
                 ->requiresConfirmation(),
                 DeleteAction::make('delete')
