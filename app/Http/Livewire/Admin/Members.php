@@ -6,11 +6,8 @@ use Livewire\Component;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Members as MembersModel;
-use Filament\Tables\Actions\ActionGroup;
 use WireUi\Traits\Actions;
-use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\DeleteAction;
 use Illuminate\Database\Eloquent\Builder;
 
 class Members extends Component implements Tables\Contracts\HasTable
