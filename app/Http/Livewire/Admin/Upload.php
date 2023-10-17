@@ -37,6 +37,10 @@ class Upload extends Component
                     $member[$key] = null;
                 }
             }
+            if (strpos($member['darbc_id'], '.') !== false) {
+                continue;
+            }
+
             Members::create($member);
 
             $this->dialog()->success(

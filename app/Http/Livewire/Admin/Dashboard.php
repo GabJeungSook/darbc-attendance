@@ -10,6 +10,35 @@ class Dashboard extends Component
     public $total_members;
     public $total_attendance;
     public $total_absent;
+    public $date_from;
+    public $date_to;
+    public $time_from;
+    public $time_to;
+    public $total_attendance_by_date;
+    public $total_absent_by_date;
+
+   public function generateCount()
+   {
+        if($this->date_from == null || $this->date_to == null)
+        {
+            $this->total_attendance_by_date = \App\Models\Attendance::where('event_id', $this->event->id)
+            ->count();
+        }elseif($this->time_from == null || $this->time_to == null)
+        {
+            $this->total_attendance_by_date = \App\Models\Attendance::where('event_id', $this->event->id)
+            ->whereDate('created_at', '>=', $this->date_from)
+            ->whereDate('created_at', '<=', $this->date_to)
+            ->count();
+        }
+        else{
+            $this->total_attendance_by_date = \App\Models\Attendance::where('event_id', $this->event->id)
+            ->whereDate('created_at', '>=', $this->date_from)
+            ->whereDate('created_at', '<=', $this->date_to)
+            ->whereTime('created_at', '>=', $this->time_from)
+            ->whereTime('created_at', '<=', $this->time_to)
+            ->count();
+        }
+   }
 
     public function mount()
     {
@@ -19,9 +48,11 @@ class Dashboard extends Component
             $this->total_members = \App\Models\Members::count();
             $this->total_attendance = \App\Models\Attendance::where('event_id', $this->event->id)->count();
             $this->total_absent = $this->total_members - $this->total_attendance;
+            $this->date_from = $this->event->created_at->format('Y-m-d');
+            $this->date_to = $this->event->created_at->format('Y-m-d');
+            $this->total_attendance_by_date = \App\Models\Attendance::where('event_id', $this->event->id)->whereDate('created_at', $this->event->created_at->format('Y-m-d'))->count();
+            $this->total_absent_by_date = $this->total_members - $this->total_attendance_by_date;
         }
-
-
     }
 
     public function render()
