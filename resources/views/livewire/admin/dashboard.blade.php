@@ -81,7 +81,7 @@
                     @foreach ($giveaways as $item)
                     <tr>
                     <td class="whitespace-nowrap px-3 py-4 text-md font-semibold text-gray-600">{{$item->name}}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-md font-semibold text-gray-600">{{$item->attendances()->count('giveaway_id')}}</td>
+                    <td class="whitespace-nowrap px-3 py-4 text-md font-semibold text-gray-600">{{\App\Models\Attendance::where('event_id', $this->event->id)->where('giveaway_id', $item->id)->count()}}</td>
                     </tr>
                     @endforeach
 
