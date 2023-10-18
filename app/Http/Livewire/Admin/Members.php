@@ -36,7 +36,7 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->label('Update Data')
             ->button()
             ->color('danger')
-            ->visible(true)
+            ->visible(false)
             ->action(function ($record) {
                 $attendance = Attendance::get();
                 foreach ($attendance as $item) {
