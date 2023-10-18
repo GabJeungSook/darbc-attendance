@@ -3,6 +3,9 @@
 namespace App\Http\Livewire\Admin;
 
 use Livewire\Component;
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
+use Filament\Notifications\Notification;
 
 class Dashboard extends Component
 {
@@ -17,6 +20,37 @@ class Dashboard extends Component
     public $total_attendance_by_date;
     public $total_absent_by_date;
     public $giveaways;
+
+
+    public function testPrinter()
+    {
+     $active_event = \App\Models\Event::where('event_status', 1)->first();
+     try{
+        $printerIp = auth()->user()->printer->ip_address;
+        $printerPort = 9100;
+        $content = 'Printer is Good!';
+        $connector = new NetworkPrintConnector($printerIp);
+        $printer = new Printer($connector);
+        if($printer)
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->setEmphasis(true);
+        $printer -> text(strtoupper($active_event->event_name)."\n");
+        $printer->setEmphasis(false);
+        $printer -> text(\Carbon\Carbon::parse($active_event->date_of_event)->format('F d, Y')."\n");
+        $printer -> feed(2);
+        $printer -> text(strtoupper(auth()->user()->name)."\n");
+        $printer -> feed(4);
+        $printer -> text($content);
+        $printer -> feed(4);
+        $printer -> cut();
+        $printer -> close();
+     }catch (\Exception $e) {
+        $this->dialog()->error(
+            $title = 'Oops!',
+            $description = 'Failed to connect to the printer. Please check the IP Address.'
+        );
+    }
+    }
 
    public function generateCount()
    {

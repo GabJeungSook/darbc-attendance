@@ -49,6 +49,10 @@ Route::get('/report', function () {
     return view('admin.report');
 })->middleware(['auth', 'verified', 'role:admin'])->name('report');
 
+Route::get('/printers', function () {
+    return view('admin.printer');
+})->middleware(['auth', 'verified', 'role:admin'])->name('printer');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

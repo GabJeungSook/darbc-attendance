@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Members;
+use App\Models\Printer as ModelPrinter;
 use Livewire\Component;
 use App\Models\Giveaway;
 use WireUi\Traits\Actions;
@@ -23,6 +24,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Forms\Components\CheckboxList;
 use App\Models\Attendance as AttendanceModel;
+use Mike42\Escpos\Printer;
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 
 class Attendance extends Component implements Tables\Contracts\HasTable
 {
@@ -95,6 +98,7 @@ class Attendance extends Component implements Tables\Contracts\HasTable
             ->form([
                 Radio::make('giveaways')
                 ->reactive()
+                ->required()
                 ->options(Giveaway::all()->pluck('name', 'id')->toArray()),
                 TextInput::make('other_specify')->visible(fn ($get) => $get('giveaways') == 7),
                 ])
@@ -106,28 +110,36 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                             $description = 'Member Already Attended'
                         );
                     } else {
-                        if($data['giveaways'] === 7)
+                        if($data['giveaways'] === '7')
                         {
-                            AttendanceModel::create([
+                        $attendance_record = AttendanceModel::create([
                                 'member_id' => $record->id,
                                 'giveaway_id' => $data['giveaways'],
                                 'other_giveaway' => $data['other_specify'],
                                 'event_id' => $this->event->id,
                             ]);
                         }else{
-                            AttendanceModel::create([
+                        $attendance_record =   AttendanceModel::create([
                                 'member_id' => $record->id,
                                 'giveaway_id' => $data['giveaways'],
                                 'event_id' => $this->event->id,
                             ]);
-                        }
 
+                        }
+                        $this->printReceipt($attendance_record);
                         $this->dialog()->success(
                             $title = 'Success',
                             $description = 'Member Attended'
                         );
                     }
-                }),
+                })->visible(function  ($record) {
+                        $attendance = AttendanceModel::where('member_id', $record->id)->where('event_id', $this->event->id)->first();
+                        if ($attendance) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }),
             // Action::make('attended')
             // ->label('Confirm')
             // ->icon('heroicon-o-check-circle')
@@ -159,6 +171,48 @@ class Attendance extends Component implements Tables\Contracts\HasTable
             //     }
             // })->requiresConfirmation(),
         ];
+    }
+
+    public function printReceipt($record)
+    {
+        $attendance = AttendanceModel::where('id', $record->id)->first();
+        $active_event = \App\Models\Event::where('event_status', 1)->first();
+        try{
+           $printerIp = auth()->user()->printer->ip_address;
+           $printerPort = 9100;
+           $connector = new NetworkPrintConnector($printerIp);
+           $printer = new Printer($connector);
+           if($printer)
+           $printer->setJustification(Printer::JUSTIFY_CENTER);
+           $printer->setEmphasis(true);
+           $printer -> text(strtoupper($active_event->event_name)."\n");
+           $printer->setEmphasis(false);
+           $printer -> text(\Carbon\Carbon::parse($active_event->date_of_event)->format('F d, Y')."\n");
+           $printer -> text(strtoupper(auth()->user()->name)."\n");
+           $printer -> feed(2);
+           $printer->setJustification(Printer::JUSTIFY_LEFT);
+           $printer -> text("DARBC ID: ".$attendance->member->darbc_id."\n");
+           $printer -> text("Name: ".$attendance->member->last_name.", ".$attendance->member->first_name."\n");
+           $printer -> text("Date: ".\Carbon\Carbon::parse($attendance->created_at)->format('F d, Y')."\n");
+           $printer -> text("Time: ".\Carbon\Carbon::parse($attendance->created_at)->format('h:i:s A')."\n");
+        //    if($attendance->giveaway->name == 'Other')
+        //    {
+        //     $printer -> text("Giveaway: ".$attendance->giveaway->name." (".$attendance->other_giveaway.")"."\n");
+        //    }else{
+        //     $printer -> text("Giveaway: ".$attendance->giveaway->name."\n");
+        //    }
+           $printer -> feed(4);
+           $printer->setJustification(Printer::JUSTIFY_CENTER);
+           $printer -> text(strtoupper($attendance->member->last_name.", ".$attendance->member->first_name)."\n");
+           $printer -> feed(1);
+           $printer -> cut();
+           $printer -> close();
+        }catch (\Exception $e) {
+           $this->dialog()->error(
+               $title = 'Oops!',
+               $description = 'Failed to connect to the printer. Please check the IP Address.'
+           );
+       }
     }
 
 
