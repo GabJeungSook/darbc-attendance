@@ -16,6 +16,7 @@ class Dashboard extends Component
     public $time_to;
     public $total_attendance_by_date;
     public $total_absent_by_date;
+    public $giveaways;
 
    public function generateCount()
    {
@@ -52,6 +53,9 @@ class Dashboard extends Component
             $this->date_to = $this->event->created_at->format('Y-m-d');
             $this->total_attendance_by_date = \App\Models\Attendance::where('event_id', $this->event->id)->whereDate('created_at', $this->event->created_at->format('Y-m-d'))->count();
             $this->total_absent_by_date = $this->total_members - $this->total_attendance_by_date;
+            $this->giveaways = \App\Models\Giveaway::whereHas('attendances', function($query){
+                $query->where('event_id', $this->event->id);
+            })->get();
         }
     }
 
