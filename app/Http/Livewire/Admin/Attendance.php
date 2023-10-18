@@ -99,7 +99,7 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                 Radio::make('giveaways')
                 ->reactive()
                 ->required()
-                ->options(Giveaway::all()->pluck('name', 'id')->toArray()),
+                ->options(Giveaway::where('event_id', $this->event->id)->pluck('name', 'id')->toArray()),
                 TextInput::make('other_specify')->visible(fn ($get) => $get('giveaways') == 7),
                 ])
                 ->action(function ($record, $data) {
@@ -118,6 +118,9 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                                 'giveaway_id' => $data['giveaways'],
                                 'other_giveaway' => $data['other_specify'],
                                 'event_id' => $this->event->id,
+                                'last_name' => $record->last_name,
+                                'first_name' => $record->first_name,
+                                'area' => $record->area,
                             ]);
                         }else{
                         $attendance_record =   AttendanceModel::create([
@@ -125,6 +128,9 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                                 'member_id' => $record->id,
                                 'giveaway_id' => $data['giveaways'],
                                 'event_id' => $this->event->id,
+                                'last_name' => $record->last_name,
+                                'first_name' => $record->first_name,
+                                'area' => $record->area,
                             ]);
 
                         }

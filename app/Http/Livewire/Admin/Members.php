@@ -6,6 +6,7 @@ use Livewire\Component;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Members as MembersModel;
+use App\Models\Attendance;
 use WireUi\Traits\Actions;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\Action;
@@ -29,7 +30,31 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->label('Import Data')
             ->button()
             ->color('warning')
-            ->action('redirectToUpload')
+            ->action('redirectToUpload'),
+            Action::make('update_records')
+            ->icon('heroicon-o-upload')
+            ->label('Update Data')
+            ->button()
+            ->color('danger')
+            ->visible(true)
+            ->action(function ($record) {
+                $attendance = Attendance::get();
+                foreach ($attendance as $item) {
+                    if($item->last_name == null || $item->first_name == null || $item->area == null)
+                    {
+                        $member = MembersModel::where('id', $item->member_id)->first();
+                        $item->update([
+                            'last_name' => $member->last_name,
+                            'first_name' => $member->first_name,
+                            'area' => $member->area,
+                        ]);
+                    }
+                }
+                $this->dialog()->success(
+                    $title = 'Success',
+                    $description = 'Updated Successfully'
+                );
+            })
         ];
     }
 
