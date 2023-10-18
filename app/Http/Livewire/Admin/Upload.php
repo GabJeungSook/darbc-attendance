@@ -9,6 +9,9 @@ use Livewire\Component;
 use WireUi\Traits\Actions;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use App\Imports\MemberImport;
+use App\Imports\AreaImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Upload extends Component
 {
@@ -16,6 +19,8 @@ class Upload extends Component
     use Actions;
     public $masterlist;
     public $area;
+    public $member_update;
+    public $area_update;
 
     public function uploadMembers()
     {
@@ -49,6 +54,31 @@ class Upload extends Component
                 $description = 'Data uploaded'
             );
         }
+    }
+
+    public function returnToMembers()
+    {
+        return redirect()->route('members');
+    }
+
+    public function updateMember()
+    {
+        Excel::import(new MemberImport, $this->member_update);
+
+        $this->dialog()->success(
+            $title = 'Success',
+            $description = 'Data updated'
+        );
+    }
+
+    public function updateArea()
+    {
+        Excel::import(new AreaImport, $this->area_update);
+
+        $this->dialog()->success(
+            $title = 'Success',
+            $description = 'Data updated'
+        );
     }
 
     public function uploadArea()

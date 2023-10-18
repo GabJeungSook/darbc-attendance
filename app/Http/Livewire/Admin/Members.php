@@ -8,6 +8,7 @@ use Filament\Tables;
 use App\Models\Members as MembersModel;
 use WireUi\Traits\Actions;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 
 class Members extends Component implements Tables\Contracts\HasTable
@@ -18,6 +19,18 @@ class Members extends Component implements Tables\Contracts\HasTable
     protected function getTableQuery(): Builder
     {
         return MembersModel::query();
+    }
+
+    protected function getTableHeaderActions()
+    {
+        return [
+             Action::make('import')
+            ->icon('heroicon-o-download')
+            ->label('Import Data')
+            ->button()
+            ->color('warning')
+            ->action('redirectToUpload')
+        ];
     }
 
     protected function getTableActions()
@@ -57,6 +70,11 @@ class Members extends Component implements Tables\Contracts\HasTable
             Tables\Columns\TextColumn::make('area')
             ->label('Area')->sortable()->searchable(),
         ];
+    }
+
+    public function redirectToUpload()
+    {
+        return redirect()->route('upload');
     }
 
     public function render()
