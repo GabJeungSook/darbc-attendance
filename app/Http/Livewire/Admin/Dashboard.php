@@ -6,9 +6,11 @@ use Livewire\Component;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Filament\Notifications\Notification;
+use WireUi\Traits\Actions;
 
 class Dashboard extends Component
 {
+    use Actions;
     public $event;
     public $total_members;
     public $total_attendance;

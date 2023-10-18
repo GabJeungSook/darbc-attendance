@@ -14,4 +14,9 @@ class Giveaway extends Model
     {
         return $this->hasMany(Attendance::class);
     }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
 }

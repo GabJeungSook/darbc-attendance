@@ -113,6 +113,7 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                         if($data['giveaways'] === '7')
                         {
                         $attendance_record = AttendanceModel::create([
+                                'user_id' => auth()->user()->id,
                                 'member_id' => $record->id,
                                 'giveaway_id' => $data['giveaways'],
                                 'other_giveaway' => $data['other_specify'],
@@ -120,6 +121,7 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                             ]);
                         }else{
                         $attendance_record =   AttendanceModel::create([
+                                'user_id' => auth()->user()->id,
                                 'member_id' => $record->id,
                                 'giveaway_id' => $data['giveaways'],
                                 'event_id' => $this->event->id,
@@ -225,6 +227,8 @@ class Attendance extends Component implements Tables\Contracts\HasTable
             ->label('Last Name')->sortable()->searchable(),
             Tables\Columns\TextColumn::make('first_name')
             ->label('First Name')->sortable()->searchable(),
+            Tables\Columns\TextColumn::make('area')
+            ->label('Area')->sortable()->searchable(),
         ];
     }
 
