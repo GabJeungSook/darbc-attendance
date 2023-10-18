@@ -41,6 +41,10 @@ Route::get('/attendance', function () {
     return view('admin.attendance');
 })->middleware(['auth', 'verified'])->name('attendance');
 
+Route::get('/giveaway', function () {
+    return view('admin.giveaway');
+})->middleware(['auth', 'verified', 'role:admin'])->name('giveaway');
+
 Route::get('/report', function () {
     return view('admin.report');
 })->middleware(['auth', 'verified', 'role:admin'])->name('report');

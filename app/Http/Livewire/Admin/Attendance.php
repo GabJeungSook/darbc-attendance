@@ -6,11 +6,14 @@ use Filament\Forms;
 use Filament\Tables;
 use App\Models\Members;
 use Livewire\Component;
+use App\Models\Giveaway;
 use WireUi\Traits\Actions;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\Layout;
+use Filament\Forms\Components\Radio;
 use Filament\Tables\Actions\EditAction;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\CreateAction;
@@ -18,6 +21,7 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Forms\Components\CheckboxList;
 use App\Models\Attendance as AttendanceModel;
 
 class Attendance extends Component implements Tables\Contracts\HasTable
@@ -83,36 +87,67 @@ class Attendance extends Component implements Tables\Contracts\HasTable
     protected function getTableActions()
     {
         return [
-            Action::make('attended')
+            Action::make('attend')
             ->label('Confirm')
-            ->icon('heroicon-o-check-circle')
             ->button()
+            ->icon('heroicon-o-check-circle')
             ->color('success')
-            ->action(function ($record) {
-                $attendance = AttendanceModel::where('member_id', $record->id)->where('event_id', $this->event->id)->first();
-                if ($attendance) {
-                    $this->dialog()->error(
-                        $title = 'Oops!',
-                        $description = 'Member Already Attended'
-                    );
-                } else {
-                    AttendanceModel::create([
-                        'member_id' => $record->id,
-                        'event_id' => $this->event->id,
-                    ]);
-                    $this->dialog()->success(
-                        $title = 'Success',
-                        $description = 'Member Attended'
-                    );
-                }
-            })->visible(function  ($record) {
-                $attendance = AttendanceModel::where('member_id', $record->id)->where('event_id', $this->event->id)->first();
-                if ($attendance) {
-                    return false;
-                } else {
-                    return true;
-                }
-            })->requiresConfirmation(),
+            ->form([
+                Radio::make('giveaways')
+                ->reactive()
+                ->options(Giveaway::all()->pluck('name', 'id')->toArray()),
+                TextInput::make('other_specify')->visible(fn ($get) => $get('giveaways') == 7),
+                ])
+                ->action(function ($record, $data) {
+                    $attendance = AttendanceModel::where('member_id', $record->id)->where('event_id', $this->event->id)->first();
+                    if ($attendance) {
+                        $this->dialog()->error(
+                            $title = 'Oops!',
+                            $description = 'Member Already Attended'
+                        );
+                    } else {
+                        AttendanceModel::create([
+                            'member_id' => $record->id,
+                            'giveaway_id' => $data['giveaways'],
+                            'other_giveaway' => $data['other_specify'],
+                            'event_id' => $this->event->id,
+                        ]);
+                        $this->dialog()->success(
+                            $title = 'Success',
+                            $description = 'Member Attended'
+                        );
+                    }
+                }),
+            // Action::make('attended')
+            // ->label('Confirm')
+            // ->icon('heroicon-o-check-circle')
+            // ->button()
+            // ->color('success')
+            // ->action(function ($record) {
+            //     $attendance = AttendanceModel::where('member_id', $record->id)->where('event_id', $this->event->id)->first();
+            //     if ($attendance) {
+            //         $this->dialog()->error(
+            //             $title = 'Oops!',
+            //             $description = 'Member Already Attended'
+            //         );
+            //     } else {
+            //         AttendanceModel::create([
+            //             'member_id' => $record->id,
+            //             'event_id' => $this->event->id,
+            //         ]);
+            //         $this->dialog()->success(
+            //             $title = 'Success',
+            //             $description = 'Member Attended'
+            //         );
+            //     }
+            // })->visible(function  ($record) {
+            //     $attendance = AttendanceModel::where('member_id', $record->id)->where('event_id', $this->event->id)->first();
+            //     if ($attendance) {
+            //         return false;
+            //     } else {
+            //         return true;
+            //     }
+            // })->requiresConfirmation(),
         ];
     }
 

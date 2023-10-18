@@ -20,6 +20,11 @@ class Attendance extends Model
         return $this->belongsTo(Members::class, 'member_id', 'id');
     }
 
+    public function giveaway()
+    {
+        return $this->belongsTo(Giveaway::class);
+    }
+
 
 
 }
