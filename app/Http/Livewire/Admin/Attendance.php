@@ -106,12 +106,22 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                             $description = 'Member Already Attended'
                         );
                     } else {
-                        AttendanceModel::create([
-                            'member_id' => $record->id,
-                            'giveaway_id' => $data['giveaways'],
-                            'other_giveaway' => $data['other_specify'],
-                            'event_id' => $this->event->id,
-                        ]);
+                        if($data['giveaways'] === 7)
+                        {
+                            AttendanceModel::create([
+                                'member_id' => $record->id,
+                                'giveaway_id' => $data['giveaways'],
+                                'other_giveaway' => $data['other_specify'],
+                                'event_id' => $this->event->id,
+                            ]);
+                        }else{
+                            AttendanceModel::create([
+                                'member_id' => $record->id,
+                                'giveaway_id' => $data['giveaways'],
+                                'event_id' => $this->event->id,
+                            ]);
+                        }
+
                         $this->dialog()->success(
                             $title = 'Success',
                             $description = 'Member Attended'
