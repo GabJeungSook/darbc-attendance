@@ -38,6 +38,7 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->form([
                 Forms\Components\TextInput::make('last_name')->label("Last Name")->required(),
                 Forms\Components\TextInput::make('first_name')->label("First Name")->required(),
+                Forms\Components\TextInput::make('area')->label("Area")->required(),
             ])
             ->requiresConfirmation(),
         ];
@@ -53,6 +54,8 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->label('Last Name')->sortable()->searchable(),
             Tables\Columns\TextColumn::make('first_name')
             ->label('First Name')->sortable()->searchable(),
+            Tables\Columns\TextColumn::make('area')
+            ->label('Area')->sortable()->searchable(),
         ];
     }
 

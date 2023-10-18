@@ -15,6 +15,7 @@ class Upload extends Component
     use WithFileUploads;
     use Actions;
     public $masterlist;
+    public $area;
 
     public function uploadMembers()
     {
@@ -48,8 +49,36 @@ class Upload extends Component
                 $description = 'Data uploaded'
             );
         }
+    }
 
+    public function uploadArea()
+    {
+        $csvContents = Storage::get($this->area->getClientOriginalName());
+        $csvReader = Reader::createFromString($csvContents);
+        $csvRecords = $csvReader->getRecords();
+        foreach ($csvRecords as $csvRecord) {
 
+                $area = [
+                    'darbc_id' => $csvRecord[0],
+                    'area' => $csvRecord[1],
+                ];
+                Members::where('darbc_id', $area['darbc_id'])->update(['area' => $area['area']]);
+        }
+
+        $this->dialog()->success(
+            $title = 'Success',
+            $description = 'Data saved'
+        );
+
+    }
+
+    public function resetArea()
+    {
+        Members::query()->update(['area' => null]);
+        $this->dialog()->success(
+            $title = 'Success',
+            $description = 'Data reset'
+        );
     }
     public function render()
     {
