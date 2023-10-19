@@ -5,14 +5,17 @@ namespace App\Http\Livewire\Admin;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Members;
-use App\Models\Printer as ModelPrinter;
 use Livewire\Component;
 use App\Models\Giveaway;
+use App\Models\VoidMember;
+use Mike42\Escpos\Printer;
 use WireUi\Traits\Actions;
+use Illuminate\Support\Facades\DB;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\Layout;
 use Filament\Forms\Components\Radio;
+use App\Models\Printer as ModelPrinter;
 use Filament\Tables\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -24,7 +27,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Forms\Components\CheckboxList;
 use App\Models\Attendance as AttendanceModel;
-use Mike42\Escpos\Printer;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 
 class Attendance extends Component implements Tables\Contracts\HasTable
@@ -148,6 +150,38 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                             return true;
                         }
                     }),
+            Action::make('void')
+            ->label('Void')
+            ->icon('heroicon-o-x-circle')
+            ->button()
+            ->color('danger')
+            ->visible(function  ($record) {
+                $attendance = AttendanceModel::where('member_id', $record->id)->where('event_id', $this->event->id)->first();
+                if ($attendance) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })
+            ->action(function ($record) {
+                //insert to void table
+                DB::beginTransaction();
+                VoidMember::create([
+                    'darbc_id' => $record->darbc_id,
+                    'last_name' => $record->last_name,
+                    'first_name' => $record->first_name,
+                    'area' => $record->area,
+                ]);
+                $attendance = AttendanceModel::where('member_id', $record->id)->where('event_id', $this->event->id)->first();
+                $attendance->delete();
+                DB::commit();
+                $this->dialog()->success(
+                    $title = 'Success',
+                    $description = 'Attendance Voided'
+                );
+            })->requiresConfirmation(),
+
+
             // Action::make('attended')
             // ->label('Confirm')
             // ->icon('heroicon-o-check-circle')
