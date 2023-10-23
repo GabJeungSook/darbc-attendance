@@ -69,8 +69,8 @@
             @foreach ($attendance as $item)
               <tr>
                 <td class="border text-gray-600 text-sm whitespace-nowrap px-3 py-1">{{ strtoupper($item->member->darbc_id) }}</td>
-                <td class="border text-gray-600 text-sm whitespace-nowrap px-3  py-1">{{ strtoupper($item->last_name) }}</td>
                 <td class="border text-gray-600 text-sm whitespace-nowrap px-3  py-1">{{ strtoupper($item->first_name) }}</td>
+                <td class="border text-gray-600 text-sm whitespace-nowrap px-3  py-1">{{ strtoupper($item->last_name) }}</td>
                 <td class="border text-gray-600 text-sm whitespace-nowrap px-3  py-1">{{ strtoupper($item->area) }}</td>
                 <td class="border text-gray-600 text-sm whitespace-nowrap px-3  py-1">{{ strtoupper(\Carbon\Carbon::parse($item->created_at)->format('F d, Y')) }}</td>
                 <td class="border text-gray-600 text-sm whitespace-nowrap px-3  py-1">{{ strtoupper(\Carbon\Carbon::parse($item->created_at)->format('h:i A')) }}</td>

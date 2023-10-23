@@ -119,25 +119,8 @@ class Events extends Component implements Tables\Contracts\HasTable
                         $record->event_status == false ? $record->update(['event_status' => true]) : $record->update(['event_status' => false]);
                     }
                 }
-
-                // $activeElection = Event::where('event_status', true)->exists();
-                // if($record->is_active)
-                // {
-                //     $record->update(['event_status' => false]);
-                // }else{
-                //     if($activeElection)
-                //     {
-                //         Notification::make()
-                //         ->title('Operation Failed')
-                //         ->body('You can only activate one (1) event at a time.')
-                //         ->danger()
-                //         ->send();
-                //         $this->redirect(route('event'));
-                //     } else {
-                //         $record->is_active == false ? $record->update(['event_status' => true]) : $record->update(['event_status' => false]);
-                //     }
-                // }
-            })
+            }),
+            Tables\Columns\CheckboxColumn::make('has_giveaway')->label('Giveaway')
         ];
     }
 

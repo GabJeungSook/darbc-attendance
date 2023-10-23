@@ -144,12 +144,51 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                     }
                 })->visible(function  ($record) {
                         $attendance = AttendanceModel::where('member_id', $record->id)->where('event_id', $this->event->id)->first();
-                        if ($attendance) {
+                        if ($attendance || $this->event->has_giveaway == false) {
                             return false;
                         } else {
                             return true;
                         }
                     }),
+            Action::make('attend_wo_giveaway')
+            ->label('Confirm')
+            ->button()
+            ->icon('heroicon-o-check-circle')
+            ->color('success')
+            ->action(function ($record, $data){
+                $attendance = AttendanceModel::where('member_id', $record->id)->where('event_id', $this->event->id)->first();
+                if ($attendance) {
+                    $this->dialog()->error(
+                        $title = 'Oops!',
+                        $description = 'Member Already Attended'
+                    );
+                }else
+                {
+                    $attendance_record =   AttendanceModel::create([
+                        'user_id' => auth()->user()->id,
+                        'member_id' => $record->id,
+                        'event_id' => $this->event->id,
+                        'last_name' => $record->last_name,
+                        'first_name' => $record->first_name,
+                        'area' => $record->area,
+                    ]);
+
+                    $this->printReceipt($attendance_record);
+                    $this->dialog()->success(
+                        $title = 'Success',
+                        $description = 'Member Attended'
+                    );
+                }
+
+            })->requiresConfirmation()
+            ->visible(function  ($record) {
+                $attendance = AttendanceModel::where('member_id', $record->id)->where('event_id', $this->event->id)->first();
+                if ($attendance || $this->event->has_giveaway == true) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }),
             Action::make('void')
             ->label('Void')
             ->icon('heroicon-o-x-circle')
@@ -234,7 +273,7 @@ class Attendance extends Component implements Tables\Contracts\HasTable
            $printer -> feed(2);
            $printer->setJustification(Printer::JUSTIFY_LEFT);
            $printer -> text("DARBC ID: ".$attendance->member->darbc_id."\n");
-           $printer -> text("Name: ".$attendance->member->last_name.", ".$attendance->member->first_name."\n");
+           $printer -> text("Name: ".$attendance->member->last_name." ".$attendance->member->first_name."\n");
            $printer -> text("Date: ".\Carbon\Carbon::parse($attendance->created_at)->format('F d, Y')."\n");
            $printer -> text("Time: ".\Carbon\Carbon::parse($attendance->created_at)->format('h:i:s A')."\n");
         //    if($attendance->giveaway->name == 'Other')
@@ -245,7 +284,7 @@ class Attendance extends Component implements Tables\Contracts\HasTable
         //    }
            $printer -> feed(4);
            $printer->setJustification(Printer::JUSTIFY_CENTER);
-           $printer -> text(strtoupper($attendance->member->last_name.", ".$attendance->member->first_name)."\n");
+           $printer -> text(strtoupper($attendance->member->last_name." ".$attendance->member->first_name)."\n");
            $printer -> feed(1);
            $printer -> cut();
            $printer -> close();
@@ -263,9 +302,9 @@ class Attendance extends Component implements Tables\Contracts\HasTable
         return [
             Tables\Columns\TextColumn::make('darbc_id')
             ->label('DARBC ID')->sortable()->searchable(),
-            Tables\Columns\TextColumn::make('last_name')
-            ->label('Last Name')->sortable()->searchable(),
             Tables\Columns\TextColumn::make('first_name')
+            ->label('Last Name')->sortable()->searchable(),
+            Tables\Columns\TextColumn::make('last_name')
             ->label('First Name')->sortable()->searchable(),
             Tables\Columns\TextColumn::make('area')
             ->label('Area')->sortable()->searchable(),
