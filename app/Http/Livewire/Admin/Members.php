@@ -88,9 +88,9 @@ class Members extends Component implements Tables\Contracts\HasTable
         return [
             Tables\Columns\TextColumn::make('darbc_id')
             ->label('DARBC ID')->sortable()->searchable(),
-            Tables\Columns\TextColumn::make('first_name')
-            ->label('Last Name')->sortable()->searchable(),
             Tables\Columns\TextColumn::make('last_name')
+            ->label('Last Name')->sortable()->searchable(),
+            Tables\Columns\TextColumn::make('first_name')
             ->label('First Name')->sortable()->searchable(),
             Tables\Columns\TextColumn::make('area')
             ->label('Area')->sortable()->searchable(),
