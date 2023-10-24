@@ -17,8 +17,8 @@ class MemberImport implements ToModel, WithHeadingRow
     {
         $names = explode(',', $row['member_name']);
         $darbc_id = $row['darbc_id'];
-        $lastName = trim($names[1]);
-        $firstName = trim($names[0]);
+        $lastName = trim($names[0]);
+        $firstName = trim($names[1]);
         $succession = $row['succession'];
         $spa = $row['spa'];
 
