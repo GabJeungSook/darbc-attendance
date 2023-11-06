@@ -27,11 +27,15 @@
       </div>
 
         </div>
-        <x-select label="Select Event" placeholder="Active Event" wire:model="selected_event">
-            @foreach ($events as $item)
-            <x-select.option label="{{$item->event_name}}" value="{{$item->id}}" />
-            @endforeach
-        </x-select>
+        <div class="flex space-x-3">
+            <x-input icon="search" label="Search" placeholder="DARBC ID Or Name" wire:model="search_query"/>
+            <x-select label="Select Event" placeholder="Active Event" wire:model="selected_event">
+                @foreach ($events as $item)
+                <x-select.option label="{{$item->event_name}}" value="{{$item->id}}" />
+                @endforeach
+            </x-select>
+        </div>
+
     </div>
 
   <div class="mt-5 border rounded-lg p-4" x-ref="printContainer">

@@ -13,6 +13,7 @@ class Report extends Component
     public $event;
     public $selected_event;
     public $attendance;
+    public $search_query;
 
     public function mount()
     {
@@ -41,7 +42,17 @@ class Report extends Component
     {
         $this->attendance = Attendance::when($this->selected_event, function ($query) {
             $query->where('event_id', $this->selected_event);
-        })->get();
+        })
+        ->when($this->search_query, function ($query) {
+
+            $query->whereHas('member', function ($query) {
+                $query->where('last_name', 'like', '%'.$this->search_query.'%')
+                ->orWhere('first_name', 'like', '%'.$this->search_query.'%')
+                ->orWhere('darbc_id', 'like', '%'.$this->search_query.'%');
+            });
+
+        })
+        ->get();
         return view('livewire.admin.report', [
             'events' => Event::orderBy('event_status', 'desc')->get(),
             'attendance' => $this->attendance,

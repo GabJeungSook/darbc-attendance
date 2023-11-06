@@ -273,7 +273,7 @@ class Attendance extends Component implements Tables\Contracts\HasTable
            $printer -> feed(2);
            $printer->setJustification(Printer::JUSTIFY_LEFT);
            $printer -> text("DARBC ID: ".$attendance->member->darbc_id."\n");
-           $printer -> text("Name: ".$attendance->member->last_name." ".$attendance->member->first_name."\n");
+          // $printer -> text("Name: ".$attendance->member->last_name." ".$attendance->member->first_name."\n");
            $printer -> text("Date: ".\Carbon\Carbon::parse($attendance->created_at)->format('F d, Y')."\n");
            $printer -> text("Time: ".\Carbon\Carbon::parse($attendance->created_at)->format('h:i:s A')."\n");
         //    if($attendance->giveaway->name == 'Other')
