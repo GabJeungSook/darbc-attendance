@@ -284,6 +284,7 @@ class Attendance extends Component implements Tables\Contracts\HasTable
         //    }
            $printer -> feed(4);
            $printer->setJustification(Printer::JUSTIFY_CENTER);
+           $printer->setTextSize(1, 2);
            $printer -> text(strtoupper($attendance->member->last_name." ".$attendance->member->first_name)."\n");
            $printer -> feed(1);
            $printer -> cut();
