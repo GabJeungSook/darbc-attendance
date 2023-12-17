@@ -136,7 +136,11 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                             ]);
 
                         }
-                        $this->printReceipt($attendance_record);
+                        if($this->event->has_printer === 1)
+                        {
+                            $this->printReceipt($attendance_record);
+                        }
+                        
                         $this->dialog()->success(
                             $title = 'Success',
                             $description = 'Member Attended'

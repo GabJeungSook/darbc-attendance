@@ -21,6 +21,7 @@ class Printers extends Component implements Tables\Contracts\HasTable
 {
     use Tables\Concerns\InteractsWithTable;
     use Actions;
+    public $event;
 
     protected function getTableQuery(): Builder
     {
@@ -126,6 +127,13 @@ class Printers extends Component implements Tables\Contracts\HasTable
             ->label('IP Address')->sortable()->searchable(),
         ];
     }
+
+    public function mount()
+    {
+        $this->event = \App\Models\Event::where('event_status', 1)->first();
+
+    }
+
 
 
     public function render()

@@ -120,7 +120,8 @@ class Events extends Component implements Tables\Contracts\HasTable
                     }
                 }
             }),
-            Tables\Columns\CheckboxColumn::make('has_giveaway')->label('Giveaway')
+            Tables\Columns\CheckboxColumn::make('has_giveaway')->label('Giveaway'),
+            Tables\Columns\CheckboxColumn::make('has_printer')->label('Require Printer')
         ];
     }
 
