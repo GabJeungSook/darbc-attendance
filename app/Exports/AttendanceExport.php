@@ -37,7 +37,7 @@ class AttendanceExport implements FromView
 
         })
         ->when($this->from_date && $this->to_date, function ($query) {
-            $query->whereBetween('created_at', [$this->from_date, $this->to_date]);
+            $query->whereDateBetween('created_at', [$this->from_date, $this->to_date]);
         })
         ->get();
 
