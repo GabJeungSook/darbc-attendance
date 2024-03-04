@@ -34,7 +34,20 @@
                 <x-select.option label="{{$item->event_name}}" value="{{$item->id}}" />
                 @endforeach
             </x-select>
+            <x-datetime-picker
+                label="From"
+                placeholder="Date Attended"
+                wire:model="from_date"
+                without-time
+            />
+            <x-datetime-picker
+            label="To"
+            placeholder="Date Attended"
+            wire:model="to_date"
+            without-time
+        />
         </div>
+
 
     </div>
 
