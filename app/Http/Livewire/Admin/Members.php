@@ -43,7 +43,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                 $url = 'https://darbcmembership.org/api/member-darbc-members';
                 $response = Http::withOptions(['verify' => false])->get($url);
                 $member_data = $response->json();
-                
+
                 $collection = collect($member_data);
                 DB::beginTransaction();
                 foreach ($collection as $item) {
@@ -51,7 +51,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                     if (!isset($item['darbc_id']) || strpos($item['darbc_id'], '.') !== false) {
                         continue; // Skip this iteration instead of returning null
                     }
-                
+
                     // Retrieve values from $item array
                     $darbc_id = $item['darbc_id'];
                     $lastName = $item['surname'];
@@ -59,15 +59,15 @@ class Members extends Component implements Tables\Contracts\HasTable
                     $succession = $item['succession_number'];
                     $spa = $item['spa'] ?? null;
                     $area = $item['area'] ?? null; // Handle missing area gracefully
-                
+
                     // Find the member
                     $member = MembersModel::where('darbc_id', $darbc_id)->first();
-                
+
                     if ($member !== null) {
                         // Check if any details have changed
-                        if ($member->last_name !== $lastName || $member->first_name !== $firstName || 
+                        if ($member->last_name !== $lastName || $member->first_name !== $firstName ||
                             $member->succession !== $succession || $member->spa !== $spa) {
-                            
+
                             // Update member details
                             $member->last_name = $lastName;
                             $member->first_name = $firstName;
@@ -144,14 +144,31 @@ class Members extends Component implements Tables\Contracts\HasTable
     {
         return [
             Tables\Columns\TextColumn::make('darbc_id')
-            ->label('DARBC ID')->sortable()->searchable(),
+            ->label('DARBC ID')->sortable()->searchable()->toggleable(),
             Tables\Columns\TextColumn::make('last_name')
-            ->label('Last Name')->sortable()->searchable(),
+            ->label('Last Name')->sortable()->searchable()->toggleable(),
             Tables\Columns\TextColumn::make('first_name')
-            ->label('First Name')->sortable()->searchable(),
+            ->label('First Name')->sortable()->searchable()->toggleable(),
+            Tables\Columns\BadgeColumn::make('succession_number')
+                ->colors([
+                    'success'
+                ])
+                ->sortable()
+                ->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
+                ->label('Ownership'),
+            Tables\Columns\TextColumn::make('spa')
+            ->label('SPA')->sortable()->searchable()->toggleable(),
             Tables\Columns\TextColumn::make('area')
-            ->label('Area')->sortable()->searchable(),
+            ->label('Area')->sortable()->searchable()->toggleable(),
         ];
+    }
+
+    function ordinal($number) {
+        $ends = array('th','st','nd','rd','th','th','th','th','th','th');
+        if ((($number % 100) >= 11) && (($number%100) <= 13))
+            return $number. 'th';
+        else
+            return $number. $ends[$number % 10];
     }
 
     public function redirectToUpload()
