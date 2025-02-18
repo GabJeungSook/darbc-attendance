@@ -25,12 +25,35 @@ class Members extends Component implements Tables\Contracts\HasTable
     protected function getTableHeaderActions()
     {
         return [
-             Action::make('import')
-            ->icon('heroicon-o-download')
-            ->label('Import Data')
+            //  Action::make('import')
+            // ->icon('heroicon-o-download')
+            // ->label('Import Data')
+            // ->button()
+            // ->color('warning')
+            // ->action('redirectToUpload'),
+            Action::make('update_members')
+            ->icon('heroicon-o-upload')
+            ->label('Update Members')
             ->button()
             ->color('warning')
-            ->action('redirectToUpload'),
+            ->requiresConfirmation()
+            ->action(function () {
+                $url = 'https://darbcmembership.org/api/member-darbc-members';
+                $response = Http::withOptions(['verify' => false])->get($url);
+                $member_data = $response->json();
+
+                $collection = collect($member_data['data']);
+                dd($collection);
+                // foreach($collection as $item)
+                // {
+                //     if (strpos($darbc_id, '.') !== false) {
+                //         return null;
+                //     }
+                // }
+
+                
+
+            }),
             Action::make('update_records')
             ->icon('heroicon-o-upload')
             ->label('Update Data')
