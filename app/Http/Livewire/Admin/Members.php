@@ -44,13 +44,13 @@ class Members extends Component implements Tables\Contracts\HasTable
                 $member_data = $response->json();
 
                 $collection = collect($member_data);
-                dd($collection);
-                // foreach($collection as $item)
-                // {
-                //     if (strpos($darbc_id, '.') !== false) {
-                //         return null;
-                //     }
-                // }
+                dd($collection->first());
+                foreach($collection as $item)
+                {
+                    if (strpos($darbc_id, '.') !== false) {
+                        return null;
+                    }
+                }
 
                 
 
