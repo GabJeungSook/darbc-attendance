@@ -61,7 +61,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                     $area = $item['area'] ?? null; // Handle missing area gracefully
                 
                     // Find the member
-                    $member = Members::where('darbc_id', $darbc_id)->first();
+                    $member = MembersModel::where('darbc_id', $darbc_id)->first();
                 
                     if ($member !== null) {
                         // Check if any details have changed
