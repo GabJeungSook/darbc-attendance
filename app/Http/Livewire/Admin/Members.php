@@ -13,6 +13,7 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\Layout;
 use Illuminate\Support\Facades\Http;
+use Filament\Tables\Filters\Filter;
 use DB;
 
 class Members extends Component implements Tables\Contracts\HasTable
@@ -119,6 +120,18 @@ class Members extends Component implements Tables\Contracts\HasTable
     protected function getTableFiltersLayout(): ?string
     {
         return Layout::AboveContent;
+    }
+
+    protected function shouldPersistTableFiltersInSession(): bool
+    {
+        return true;
+    }
+
+    protected function getTableFilters(): array
+    {
+        return [
+            Filter::make('succession_number')->label('Succession')
+        ];
     }
 
     protected function getTableActions()
