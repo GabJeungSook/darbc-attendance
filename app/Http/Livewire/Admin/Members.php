@@ -161,12 +161,12 @@ class Members extends Component implements Tables\Contracts\HasTable
                 ])
                 ->sortable()
                 ->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
-                ->label('Ownership'),
+                ->label('Ownership')->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('spa')
             ->label('SPA')->sortable()->searchable()->toggleable()
             ->formatStateUsing(function ($state) {
                 return $state ? implode("\n", json_decode($state, true)) : '';
-            }),
+            })->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('area')
             ->label('Area')->sortable()->searchable()->toggleable(),
         ];
