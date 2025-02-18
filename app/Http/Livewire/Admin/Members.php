@@ -130,7 +130,7 @@ class Members extends Component implements Tables\Contracts\HasTable
     protected function getTableFilters(): array
     {
         return [
-            Filter::make('succession_number')->label('Succession')
+            //Filter::make('succession_number')->label('Succession')
         ];
     }
 
