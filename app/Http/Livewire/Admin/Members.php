@@ -8,9 +8,10 @@ use Filament\Tables;
 use App\Models\Members as MembersModel;
 use App\Models\Attendance;
 use WireUi\Traits\Actions;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\Action;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Filters\Layout;
 use Illuminate\Support\Facades\Http;
 use DB;
 
@@ -115,6 +116,11 @@ class Members extends Component implements Tables\Contracts\HasTable
         ];
     }
 
+    protected function getTableFiltersLayout(): ?string
+    {
+        return Layout::AboveContent;
+    }
+
     protected function getTableActions()
     {
         return [
@@ -157,7 +163,10 @@ class Members extends Component implements Tables\Contracts\HasTable
                 ->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
                 ->label('Ownership'),
             Tables\Columns\TextColumn::make('spa')
-            ->label('SPA')->sortable()->searchable()->toggleable(),
+            ->label('SPA')->sortable()->searchable()->toggleable()
+            ->formatStateUsing(function ($state) {
+                return $state ? implode("\n", json_decode($state, true)) : '';
+            }),
             Tables\Columns\TextColumn::make('area')
             ->label('Area')->sortable()->searchable()->toggleable(),
         ];
