@@ -161,7 +161,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                 ])
                 ->sortable()
                 ->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
-                ->label('Ownership')->toggleable(isToggledHiddenByDefault: true),
+                ->label('Ownership'),
             Tables\Columns\TextColumn::make('spa')
             ->label('SPA')->sortable()->searchable()->toggleable()
             ->formatStateUsing(function ($state) {
