@@ -11,6 +11,7 @@ use WireUi\Traits\Actions;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Http;
 
 class Members extends Component implements Tables\Contracts\HasTable
 {
