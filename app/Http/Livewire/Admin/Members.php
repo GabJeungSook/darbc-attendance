@@ -12,6 +12,7 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Http;
+use DB;
 
 class Members extends Component implements Tables\Contracts\HasTable
 {
@@ -42,17 +43,49 @@ class Members extends Component implements Tables\Contracts\HasTable
                 $url = 'https://darbcmembership.org/api/member-darbc-members';
                 $response = Http::withOptions(['verify' => false])->get($url);
                 $member_data = $response->json();
-
+                
                 $collection = collect($member_data);
-                dd($collection->first());
-                foreach($collection as $item)
-                {
-                    if (strpos($darbc_id, '.') !== false) {
-                        return null;
+                DB::beginTransaction();
+                foreach ($collection as $item) {
+                    // Ensure darbc_id exists in the item
+                    if (!isset($item['darbc_id']) || strpos($item['darbc_id'], '.') !== false) {
+                        continue; // Skip this iteration instead of returning null
+                    }
+                
+                    // Retrieve values from $item array
+                    $darbc_id = $item['darbc_id'];
+                    $lastName = $item['surname'];
+                    $firstName = $item['first_name'];
+                    $succession = $item['succession_number'];
+                    $spa = $item['spa'] ?? null;
+                    $area = $item['area'] ?? null; // Handle missing area gracefully
+                
+                    // Find the member
+                    $member = Members::where('darbc_id', $darbc_id)->first();
+                
+                    if ($member !== null) {
+                        // Check if any details have changed
+                        if ($member->last_name !== $lastName || $member->first_name !== $firstName || 
+                            $member->succession !== $succession || $member->spa !== $spa) {
+                            
+                            // Update member details
+                            $member->last_name = $lastName;
+                            $member->first_name = $firstName;
+                            $member->succession = $succession;
+                            $member->spa = $spa;
+                            $member->area = $area;
+                            $member->save();
+                        }
+                    } else {
+                        // Debug missing members
+                        dd("Member not found with darbc_id: " . $darbc_id);
                     }
                 }
-
-                
+                DB::commit();
+                $this->dialog()->success(
+                    $title = 'Success',
+                    $description = 'Members Updated Successfully'
+                );
 
             }),
             Action::make('update_records')
