@@ -43,7 +43,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                 $response = Http::withOptions(['verify' => false])->get($url);
                 $member_data = $response->json();
 
-                $collection = collect($member_data['data']);
+                $collection = collect($member_data);
                 dd($collection);
                 // foreach($collection as $item)
                 // {
