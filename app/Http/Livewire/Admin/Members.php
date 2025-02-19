@@ -170,8 +170,8 @@ class Members extends Component implements Tables\Contracts\HasTable
                 ->label('Occupation'),
             Filter::make('occupation_details')
                 ->label('Occupation Details'),
-            Filter::make('region_description')
-                ->label('Region'),
+            // Filter::make('region_description')
+            //     ->label('Region'),
             Filter::make('address_line')
                 ->label('Address'),
             Filter::make('civil_status')
@@ -228,7 +228,9 @@ class Members extends Component implements Tables\Contracts\HasTable
     {
         return [
             Tables\Columns\TextColumn::make('darbc_id')
-            ->label('DARBC ID')->sortable()->searchable()->toggleable(),
+            ->visible(fn () => $this->tableFilters['darbc_id']['isActive'])
+            ->label('DARBC ID')
+            ->sortable(),
             Tables\Columns\TextColumn::make('last_name')
             ->label('Last Name')->sortable()->searchable()->toggleable(),
             Tables\Columns\TextColumn::make('first_name')
