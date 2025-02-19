@@ -140,7 +140,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                 ->label('Status'),
             Filter::make('percentage')
                 ->label('Percentage'),
-            Filter::make('user_surname')
+            Filter::make('last_name')
                 ->default()
                 ->label('Last Name'),
             Filter::make('user_first_name')
@@ -235,7 +235,7 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->label('DARBC ID')
             ->sortable(),
             Tables\Columns\TextColumn::make('last_name')
-            ->visible(fn () => $this->tableFilters['user_surname']['isActive'])
+            ->visible(fn () => $this->tableFilters['last_name']['isActive'])
             ->label('Last Name')
             ->sortable(),
             Tables\Columns\TextColumn::make('first_name')
