@@ -184,7 +184,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                 ->label('Children'),
             Filter::make('dependents_count')
                 ->label('No. of Dependents'),
-            Filter::make('spa_list')
+            Filter::make('spa')
                 ->label('SPA/Representatives'),
             Filter::make('sss_number')
                 ->label('SSS'),
@@ -232,21 +232,26 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->label('DARBC ID')
             ->sortable(),
             Tables\Columns\TextColumn::make('last_name')
-            ->label('Last Name')->sortable()->searchable()->toggleable(),
+            ->visible(fn () => $this->tableFilters['user_surname']['isActive'])
+            ->label('Last Name')
+            ->sortable(),
             Tables\Columns\TextColumn::make('first_name')
-            ->label('First Name')->sortable()->searchable()->toggleable(),
+            ->visible(fn () => $this->tableFilters['user_first_name']['isActive'])
+            ->label('First Name')
+            ->sortable(),
             Tables\Columns\BadgeColumn::make('succession_number')
                 ->colors([
                     'success'
                 ])
                 ->sortable()
                 ->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
-                ->label('Ownership')->toggleable(),
+                ->visible(fn () => $this->tableFilters['succession_number']['isActive'])
+                ->label('Ownership'),
             Tables\Columns\TextColumn::make('spa')
-            ->label('SPA')->sortable()->searchable()->toggleable()
+            ->label('SPA/Representatives')->sortable()->searchable()
             ->formatStateUsing(function ($state) {
                 return $state ? implode("\n", json_decode($state, true)) : '';
-            })->toggleable(isToggledHiddenByDefault: true),
+            })->visible(fn () => $this->tableFilters['succession_number']['isActive']),
             Tables\Columns\TextColumn::make('area')
             ->label('Area')->sortable()->searchable()->toggleable(),
         ];
