@@ -7,6 +7,7 @@ use Filament\Forms;
 use Filament\Tables;
 use App\Models\Members as MembersModel;
 use App\Models\Attendance;
+use Carbon\Carbon;
 use WireUi\Traits\Actions;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\EditAction;
@@ -239,6 +240,10 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->visible(fn () => $this->tableFilters['user_first_name']['isActive'])
             ->label('First Name')
             ->sortable(),
+            Tables\Columns\TextColumn::make('middle_name')
+            ->visible(fn () => $this->tableFilters['user_middle_name']['isActive'])
+            ->label('Last Name')
+            ->sortable(),
             Tables\Columns\BadgeColumn::make('succession_number')
                 ->colors([
                     'success'
@@ -251,9 +256,110 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->label('SPA/Representatives')->sortable()->searchable()
             ->formatStateUsing(function ($state) {
                 return $state ? implode("\n", json_decode($state, true)) : '';
-            })->visible(fn () => $this->tableFilters['succession_number']['isActive']),
+            })->visible(fn () => $this->tableFilters['spa']['isActive']),
             Tables\Columns\TextColumn::make('area')
-            ->label('Area')->sortable()->searchable()->toggleable(),
+            ->label('Area')->sortable()->searchable(),
+            Tables\Columns\TextColumn::make('place_of_birth')
+            ->visible(fn () => $this->tableFilters['place_of_birth']['isActive'])
+            ->label('Place of Birth')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('occupation')
+            ->visible(fn () => $this->tableFilters['occupation_name']['isActive'])
+            ->label('Occupation')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('mothers_maiden_name')
+            ->visible(fn () => $this->tableFilters['mother_maiden_name']['isActive'])
+            ->label('Mother\'s Maiden Name')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('sss_number')
+            ->visible(fn () => $this->tableFilters['sss_number']['isActive'])
+            ->label('SSS')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('cluster')
+            ->visible(fn () => $this->tableFilters['cluster']['isActive'])
+            ->label('Cluster')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('gender')
+            ->visible(fn () => $this->tableFilters['gender_name']['isActive'])
+            ->label('Gender')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('occupation_details')
+            ->visible(fn () => $this->tableFilters['occupation_details']['isActive'])
+            ->label('Occupation Details')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('spouse')
+            ->visible(fn () => $this->tableFilters['spouse']['isActive'])
+            ->label('Spouse')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('tin_number')
+            ->visible(fn () => $this->tableFilters['tin_number']['isActive'])
+            ->label('TIN')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('status')
+            ->visible(fn () => $this->tableFilters['status']['isActive'])
+            ->label('Status')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('blood_type')
+            ->visible(fn () => $this->tableFilters['blood_type']['isActive'])
+            ->label('Blood Type')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('children')
+            ->visible(fn () => $this->tableFilters['children_list']['isActive'])
+            ->label('Children')
+            ->formatStateUsing(function ($state) {
+                return $state ? implode("\n", json_decode($state, true)) : '';
+            })
+            ->sortable(),
+            Tables\Columns\TextColumn::make('philhealth_number')
+            ->visible(fn () => $this->tableFilters['philhealth_number']['isActive'])
+            ->label('Philhealth')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('percentage')
+            ->visible(fn () => $this->tableFilters['percentage']['isActive'])
+            ->label('Percentage')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('date_of_birth')
+            ->visible(fn () => $this->tableFilters['date_of_birth']['isActive'])
+            ->label('Date of Birth')
+            ->formatStateUsing(function ($state) {
+                return Carbon::parse($state)->format('F j, Y');
+            })
+            ->sortable(),
+            Tables\Columns\TextColumn::make('religion')
+            ->visible(fn () => $this->tableFilters['religion']['isActive'])
+            ->label('Religion')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('address_line')
+            ->visible(fn () => $this->tableFilters['address_line']['isActive'])
+            ->label('Address')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('dependents_count')
+            ->visible(fn () => $this->tableFilters['dependents_count']['isActive'])
+            ->label('No. of Dependents')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('contact_number')
+            ->visible(fn () => $this->tableFilters['contact_number']['isActive'])
+            ->label('Contact Number')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('deceased_at')
+            ->visible(fn () => $this->tableFilters['deceased_at']['isActive'])
+            ->label('Date of Death')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('membership_status')
+            ->visible(fn () => $this->tableFilters['membership_status_name']['isActive'])
+            ->label('Membership')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('civil_status')
+            ->visible(fn () => $this->tableFilters['civil_status']['isActive'])
+            ->label('Civil Status')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('application_date')
+            ->visible(fn () => $this->tableFilters['application_date']['isActive'])
+            ->label('Date of Application')
+            ->formatStateUsing(function ($state) {
+                return Carbon::parse($state)->format('F j, Y');
+            })
+            ->sortable(),
         ];
     }
 
