@@ -131,7 +131,71 @@ class Members extends Component implements Tables\Contracts\HasTable
     protected function getTableFilters(): array
     {
         return [
-            //Filter::make('succession_number')->label('Succession')
+            Filter::make('darbc_id')
+                ->default()
+                ->label('DARBC ID'),
+            Filter::make('cluster'),
+            Filter::make('status')
+                ->default()
+                ->label('Status'),
+            Filter::make('percentage')
+                ->label('Percentage'),
+            Filter::make('user_surname')
+                ->default()
+                ->label('Last Name'),
+            Filter::make('user_first_name')
+                ->default()
+                ->label('First Name'),
+            Filter::make('user_middle_name')
+                ->default()
+                ->label('Middle Name'),
+            Filter::make('succession_number')
+                ->default()
+                ->label('Ownership'),
+            Filter::make('date_of_birth')
+                ->label('Date of Birth'),
+            Filter::make('deceased_at')
+                ->label('Date of Death'),
+            Filter::make('place_of_birth')
+                ->label('Place of Birth'),
+            Filter::make('gender_name')
+                ->label('Gender'),
+            Filter::make('blood_type')
+                ->label('Blood Type'),
+            Filter::make('religion')
+                ->label('Religion'),
+            Filter::make('membership_status_name')
+                ->label('Membership'),
+            Filter::make('occupation_name')
+                ->label('Occupation'),
+            Filter::make('occupation_details')
+                ->label('Occupation Details'),
+            Filter::make('region_description')
+                ->label('Region'),
+            Filter::make('address_line')
+                ->label('Address'),
+            Filter::make('civil_status')
+                ->label('Civil Status'),
+            Filter::make('mother_maiden_name')
+                ->label("Mother's Maiden Name"),
+            Filter::make('spouse')
+                ->label('Name of Spouse'),
+            Filter::make('children_list')
+                ->label('Children'),
+            Filter::make('dependents_count')
+                ->label('No. of Dependents'),
+            Filter::make('spa_list')
+                ->label('SPA/Representatives'),
+            Filter::make('sss_number')
+                ->label('SSS'),
+            Filter::make('tin_number')
+                ->label('TIN'),
+            Filter::make('philhealth_number')
+                ->label('PhilHealth'),
+            Filter::make('contact_number')
+                ->label('Contact Number'),
+            Filter::make('application_date')
+                ->label('Date of Application'),
         ];
     }
 
