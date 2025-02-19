@@ -137,7 +137,6 @@ class Members extends Component implements Tables\Contracts\HasTable
                 ->label('DARBC ID'),
             Filter::make('cluster'),
             Filter::make('status')
-                ->default()
                 ->label('Status'),
             Filter::make('percentage')
                 ->label('Percentage'),
@@ -148,7 +147,6 @@ class Members extends Component implements Tables\Contracts\HasTable
                 ->default()
                 ->label('First Name'),
             Filter::make('user_middle_name')
-                ->default()
                 ->label('Middle Name'),
             Filter::make('succession_number')
                 ->default()
@@ -186,7 +184,8 @@ class Members extends Component implements Tables\Contracts\HasTable
             Filter::make('dependents_count')
                 ->label('No. of Dependents'),
             Filter::make('spa')
-                ->label('SPA/Representatives'),
+                ->label('SPA/Representatives')
+                ->default(),
             Filter::make('sss_number')
                 ->label('SSS'),
             Filter::make('tin_number')
@@ -197,6 +196,9 @@ class Members extends Component implements Tables\Contracts\HasTable
                 ->label('Contact Number'),
             Filter::make('application_date')
                 ->label('Date of Application'),
+            Filter::make('area')
+                ->label('Area')
+                ->default(),
         ];
     }
 
@@ -258,6 +260,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                 return $state ? implode("\n", json_decode($state, true)) : '';
             })->visible(fn () => $this->tableFilters['spa']['isActive']),
             Tables\Columns\TextColumn::make('area')
+            ->visible(fn () => $this->tableFilters['area']['isActive'])
             ->label('Area')->sortable()->searchable(),
             Tables\Columns\TextColumn::make('place_of_birth')
             ->visible(fn () => $this->tableFilters['place_of_birth']['isActive'])
@@ -322,7 +325,7 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->visible(fn () => $this->tableFilters['date_of_birth']['isActive'])
             ->label('Date of Birth')
             ->formatStateUsing(function ($state) {
-                return Carbon::parse($state)->format('F j, Y');
+                return Carbon::parse($state)->format('F j, Y') ?? '';
             })
             ->sortable(),
             Tables\Columns\TextColumn::make('religion')
@@ -357,7 +360,7 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->visible(fn () => $this->tableFilters['application_date']['isActive'])
             ->label('Date of Application')
             ->formatStateUsing(function ($state) {
-                return Carbon::parse($state)->format('F j, Y');
+                return Carbon::parse($state)->format('F j, Y') ?? '';
             })
             ->sortable(),
         ];
