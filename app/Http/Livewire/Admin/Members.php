@@ -244,7 +244,7 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->sortable(),
             Tables\Columns\TextColumn::make('middle_name')
             ->visible(fn () => $this->tableFilters['user_middle_name']['isActive'])
-            ->label('Last Name')
+            ->label('Middle Name')
             ->sortable(),
             Tables\Columns\BadgeColumn::make('succession_number')
                 ->colors([
