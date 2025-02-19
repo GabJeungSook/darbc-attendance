@@ -21,6 +21,8 @@ class Members extends Component implements Tables\Contracts\HasTable
     use Tables\Concerns\InteractsWithTable;
     use Actions;
 
+    public $tableFilters = [];
+
     protected function getTableQuery(): Builder
     {
         return MembersModel::query();
