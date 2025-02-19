@@ -325,7 +325,12 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->visible(fn () => $this->tableFilters['date_of_birth']['isActive'])
             ->label('Date of Birth')
             ->formatStateUsing(function ($state) {
-                return Carbon::parse($state)->format('F j, Y') ?? '';
+                if($state != null)
+                {
+                    return Carbon::parse($state)->format('F j, Y');
+                }else{
+                    return '';
+                }
             })
             ->sortable(),
             Tables\Columns\TextColumn::make('religion')
@@ -360,7 +365,12 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->visible(fn () => $this->tableFilters['application_date']['isActive'])
             ->label('Date of Application')
             ->formatStateUsing(function ($state) {
-                return Carbon::parse($state)->format('F j, Y') ?? '';
+                if($state != null)
+                {
+                    return Carbon::parse($state)->format('F j, Y');
+                }else{
+                    return '';
+                }
             })
             ->sortable(),
         ];
