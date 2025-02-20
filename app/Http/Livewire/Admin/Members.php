@@ -219,6 +219,11 @@ class Members extends Component implements Tables\Contracts\HasTable
         ];
     }
 
+    protected function getTableFiltersFormColumns(): int
+    {
+        return 4;
+    }
+
     protected function getTableActions()
     {
         return [
