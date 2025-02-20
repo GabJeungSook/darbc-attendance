@@ -44,7 +44,7 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->color('warning')
             ->requiresConfirmation()
             ->action(function () {
-                $url = 'https://darbcmembership.org/api/member-darbc-members';
+                $url = 'https://darbcmembership.org/api/member-darbc-members-complete';
                 $response = Http::withOptions(['verify' => false])->get($url);
                 $member_data = $response->json();
 
@@ -60,10 +60,33 @@ class Members extends Component implements Tables\Contracts\HasTable
                     $darbc_id = $item['darbc_id'];
                     $lastName = $item['surname'];
                     $firstName = $item['first_name'];
+                    $middleName = $item['middle_name'];
                     $succession = $item['succession_number'];
                     $spa = $item['spa'] ?? null;
                     $area = $item['area'] ?? null; // Handle missing area gracefully
-
+                    $place_of_birth = $item['place_of_birth'] ?? null;
+                    $occupation = $item['occupation'] ?? null;
+                    $mothers_maiden_name = $item['mother_maiden_name'] ?? null;
+                    $sss_number = $item['sss_number'] ?? null;
+                    $cluster = $item['cluster'] ?? null;
+                    $gender = $item['gender'] ?? null;
+                    $occupation_details = $item['occupation_details'] ?? null;
+                    $spouse = $item['spouse'] ?? null;
+                    $tin_number = $item['tin_number'] ?? null;
+                    $status = $item['status'] ?? null;
+                    $blood_type = $item['blood_type'] ?? null;
+                    $children = $item['children'] ?? null;
+                    $philhealth_number = $item['philhealth_number'] ?? null;
+                    $percentage = $item['percentage'] ?? null;
+                    $date_of_birth = $item['date_of_birth'] ?? null;
+                    $religion = $item['religion'] ?? null;
+                    $address_line = $item['address_line'] ?? null;
+                    $dependents_count = $item['dependents_count'] ?? null;
+                    $contact_number = $item['contact_number'] ?? null;
+                    $deceased_at = $item['deceased_at'] ?? null;
+                    $membership_status = $item['membership_status'] ?? null;
+                    $civil_status = $item['civil_status'] ?? null;
+                    $application_date = $item['application_date'] ?? null;
                     // Find the member
                     $member = MembersModel::where('darbc_id', $darbc_id)->first();
 
@@ -75,9 +98,33 @@ class Members extends Component implements Tables\Contracts\HasTable
                             // Update member details
                             $member->last_name = $lastName;
                             $member->first_name = $firstName;
+                            $member->middle_name = $middleName;
                             $member->succession = $succession;
                             $member->spa = $spa;
                             $member->area = $area;
+                            $member->place_of_birth = $place_of_birth;
+                            $member->occupation = $occupation;
+                            $member->mothers_maiden_name = $mothers_maiden_name;
+                            $member->sss_number = $sss_number;
+                            $member->cluster = $cluster;
+                            $member->gender = $gender;
+                            $member->occupation_details = $occupation_details;
+                            $member->spouse = $spouse;
+                            $member->tin_number = $tin_number;
+                            $member->status = $status;
+                            $member->blood_type = $blood_type;
+                            $member->children = $children;
+                            $member->philhealth_number = $philhealth_number;
+                            $member->percentage = $percentage;
+                            $member->date_of_birth = $date_of_birth;
+                            $member->religion = $religion;
+                            $member->address_line = $address_line;
+                            $member->dependents_count = $dependents_count;
+                            $member->contact_number = $contact_number;
+                            $member->deceased_at = $deceased_at;
+                            $member->membership_status = $membership_status;
+                            $member->civil_status = $civil_status;
+                            $member->application_date = $application_date;
                             $member->save();
                         }
                     } else {
