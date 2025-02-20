@@ -78,7 +78,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                     $children = $item['children'] ?? null;
                     $philhealth_number = $item['philhealth_number'] ?? null;
                     $percentage = $item['percentage'] ?? null;
-                    $date_of_birth = $item['date_of_birth'] ?? null;
+                    $date_of_birth = isset($item['date_of_birth']) ? Carbon::parse($item['date_of_birth'])->format('Y-m-d') : null;
                     $religion = $item['religion'] ?? null;
                     $address_line = $item['address_line'] ?? null;
                     $dependents_count = $item['dependents_count'] ?? null;
@@ -86,7 +86,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                     $deceased_at = $item['deceased_at'] ?? null;
                     $membership_status = $item['membership_status'] ?? null;
                     $civil_status = $item['civil_status'] ?? null;
-                    $application_date = $item['application_date'] ?? null;
+                    $application_date = isset($item['application_date']) ? Carbon::parse($item['application_date'])->format('Y-m-d') : null;
                     // Find the member
                     $member = MembersModel::where('darbc_id', $darbc_id)->first();
 
