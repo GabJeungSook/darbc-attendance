@@ -275,7 +275,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                 ->sortable()
                 ->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
                 ->visible(fn () => $this->tableFilters['succession_number']['isActive'])
-                ->label('Ownership')->searchable(),
+                ->label('Ownership'),
             Tables\Columns\TextColumn::make('spa')
             ->label('SPA/Representatives')->sortable()->searchable()
             ->formatStateUsing(function ($state) {
