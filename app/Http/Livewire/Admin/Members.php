@@ -254,19 +254,19 @@ class Members extends Component implements Tables\Contracts\HasTable
         return [
             Tables\Columns\TextColumn::make('darbc_id')
             ->visible(fn () => $this->tableFilters['darbc_id']['isActive'])
-            ->label('DARBC ID')
+            ->label('DARBC ID')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('last_name')
             ->visible(fn () => $this->tableFilters['last_name']['isActive'])
-            ->label('Last Name')
+            ->label('Last Name')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('first_name')
             ->visible(fn () => $this->tableFilters['user_first_name']['isActive'])
-            ->label('First Name')
+            ->label('First Name')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('middle_name')
             ->visible(fn () => $this->tableFilters['user_middle_name']['isActive'])
-            ->label('Middle Name')
+            ->label('Middle Name')->searchable()
             ->sortable(),
             Tables\Columns\BadgeColumn::make('succession_number')
                 ->colors([
@@ -275,7 +275,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                 ->sortable()
                 ->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
                 ->visible(fn () => $this->tableFilters['succession_number']['isActive'])
-                ->label('Ownership'),
+                ->label('Ownership')->searchable(),
             Tables\Columns\TextColumn::make('spa')
             ->label('SPA/Representatives')->sortable()->searchable()
             ->formatStateUsing(function ($state) {
@@ -290,15 +290,15 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->sortable(),
             Tables\Columns\TextColumn::make('occupation')
             ->visible(fn () => $this->tableFilters['occupation_name']['isActive'])
-            ->label('Occupation')
+            ->label('Occupation')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('mothers_maiden_name')
             ->visible(fn () => $this->tableFilters['mother_maiden_name']['isActive'])
-            ->label('Mother\'s Maiden Name')
+            ->label('Mother\'s Maiden Name')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('sss_number')
             ->visible(fn () => $this->tableFilters['sss_number']['isActive'])
-            ->label('SSS')
+            ->label('SSS')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('cluster')
             ->visible(fn () => $this->tableFilters['cluster']['isActive'])
@@ -310,15 +310,15 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->sortable(),
             Tables\Columns\TextColumn::make('occupation_details')
             ->visible(fn () => $this->tableFilters['occupation_details']['isActive'])
-            ->label('Occupation Details')
+            ->label('Occupation Details')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('spouse')
             ->visible(fn () => $this->tableFilters['spouse']['isActive'])
-            ->label('Spouse')
+            ->label('Spouse')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('tin_number')
             ->visible(fn () => $this->tableFilters['tin_number']['isActive'])
-            ->label('TIN')
+            ->label('TIN')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('status')
             ->visible(fn () => $this->tableFilters['status']['isActive'])
@@ -330,14 +330,14 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->sortable(),
             Tables\Columns\TextColumn::make('children')
             ->visible(fn () => $this->tableFilters['children_list']['isActive'])
-            ->label('Children')
+            ->label('Children')->searchable()
             ->formatStateUsing(function ($state) {
                 return $state ? implode("\n", json_decode($state, true)) : '';
             })
             ->sortable(),
             Tables\Columns\TextColumn::make('philhealth_number')
             ->visible(fn () => $this->tableFilters['philhealth_number']['isActive'])
-            ->label('Philhealth')
+            ->label('Philhealth')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('percentage')
             ->visible(fn () => $this->tableFilters['percentage']['isActive'])
@@ -357,11 +357,11 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->sortable(),
             Tables\Columns\TextColumn::make('religion')
             ->visible(fn () => $this->tableFilters['religion']['isActive'])
-            ->label('Religion')
+            ->label('Religion')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('address_line')
             ->visible(fn () => $this->tableFilters['address_line']['isActive'])
-            ->label('Address')
+            ->label('Address')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('dependents_count')
             ->visible(fn () => $this->tableFilters['dependents_count']['isActive'])
@@ -369,7 +369,7 @@ class Members extends Component implements Tables\Contracts\HasTable
             ->sortable(),
             Tables\Columns\TextColumn::make('contact_number')
             ->visible(fn () => $this->tableFilters['contact_number']['isActive'])
-            ->label('Contact Number')
+            ->label('Contact Number')->searchable()
             ->sortable(),
             Tables\Columns\TextColumn::make('deceased_at')
             ->visible(fn () => $this->tableFilters['deceased_at']['isActive'])
