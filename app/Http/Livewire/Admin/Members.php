@@ -79,7 +79,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                     $title = 'Success',
                     $description = 'TIN Verification Status Updated Successfully'
                 );
-            }),
+            })->visible(false),
             Action::make('update_members')
             ->icon('heroicon-o-upload')
             ->label('Update Members')
