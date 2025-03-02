@@ -37,6 +37,49 @@ class Members extends Component implements Tables\Contracts\HasTable
             // ->button()
             // ->color('warning')
             // ->action('redirectToUpload'),
+            Action::make('update_tin_status')
+            ->icon('heroicon-o-upload')
+            ->label('Update TIN Verification Status')
+            ->button()
+            ->color('warning')
+            ->requiresConfirmation()
+            ->action(function () {
+                $url = 'https://darbcmembership.org/api/member-darbc-members-complete';
+                $response = Http::withOptions(['verify' => false])->get($url);
+                $member_data = $response->json();
+
+                $collection = collect($member_data);
+                DB::beginTransaction();
+
+                $members = MembersModel::whereIn('darbc_id', $collection->pluck('darbc_id'))->get()->keyBy('darbc_id');
+
+                foreach ($collection as $item) {
+                    if (!isset($item['darbc_id']) || strpos($item['darbc_id'], '.') !== false) {
+                        continue;
+                    }
+
+                    $darbc_id = $item['darbc_id'];
+                    $member = $members->get($darbc_id);
+
+                    if ($member) {
+                        $updateData = [
+                            'tin_verification_status' => $item['tin_verification_status'] ?? null,
+                        ];
+
+                        $member->update($updateData);
+                    } else {
+                        // Debug missing members
+                        dd("Member not found with darbc_id: " . $darbc_id);
+                    }
+                }
+
+                DB::commit();
+
+                $this->dialog()->success(
+                    $title = 'Success',
+                    $description = 'TIN Verification Status Updated Successfully'
+                );
+            }),
             Action::make('update_members')
             ->icon('heroicon-o-upload')
             ->label('Update Members')
@@ -216,6 +259,9 @@ class Members extends Component implements Tables\Contracts\HasTable
             Filter::make('area')
                 ->label('Area')
                 ->default(),
+            Filter::make('tin_verification_status')
+                ->label('TIN Verification Status')
+                ->default(),
         ];
     }
 
@@ -394,6 +440,10 @@ class Members extends Component implements Tables\Contracts\HasTable
                     return '';
                 }
             })
+            ->sortable(),
+            Tables\Columns\TextColumn::make('tin_verification_status')
+            ->visible(fn () => $this->tableFilters['tin_verification_status']['isActive'])
+            ->label('TIN Verification Status')
             ->sortable(),
         ];
     }

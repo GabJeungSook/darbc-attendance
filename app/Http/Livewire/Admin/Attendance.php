@@ -116,6 +116,9 @@ class Attendance extends Component implements Tables\Contracts\HasTable
         Filter::make('area')
             ->label('Area')
             ->default(),
+        Filter::make('tin_verification_status')
+            ->label('TIN Verification Status')
+            ->default(),
         Filter::make('attendance')
             ->form([
                 Forms\Components\Select::make('status')
@@ -518,6 +521,10 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                     return '';
                 }
             })
+            ->sortable(),
+            Tables\Columns\TextColumn::make('tin_verification_status')
+            ->visible(fn () => $this->tableFilters['tin_verification_status']['isActive'])
+            ->label('TIN Verification Status')
             ->sortable(),
         ];
     }
