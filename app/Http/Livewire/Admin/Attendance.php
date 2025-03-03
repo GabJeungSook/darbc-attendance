@@ -408,14 +408,17 @@ class Attendance extends Component implements Tables\Contracts\HasTable
             ->formatStateUsing(function ($state) {
                 //check if string or array
                 if ($state == null || $state == '[]') {
-                    return 'No SPA';
+                    return '';
                 }
                 if (is_string($state)) {
-                    return implode("\n", json_decode($state, true));
+                    if (strpos($state, '[') !== false) {
+                        return implode("\n", json_decode($state, true));
+                    }else{
+                        return $state;
+                    }
                 } else {
                     return implode("\n", json_decode($state, true));
                 }
-                // return $state ? implode("\n", json_decode($state, true)) : '';
             })->visible(fn () => $this->tableFilters['spa']['isActive']),
             Tables\Columns\TextColumn::make('area')
             ->visible(fn () => $this->tableFilters['area']['isActive'])
