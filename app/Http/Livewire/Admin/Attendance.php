@@ -406,7 +406,15 @@ class Attendance extends Component implements Tables\Contracts\HasTable
             Tables\Columns\TextColumn::make('spa')
             ->label('SPA/Representatives')->sortable()->searchable()
             ->formatStateUsing(function ($state) {
-                return $state;
+                //check if string or array
+                if ($state == null) {
+                    return 'No SPA';
+                }
+                if (is_string($state)) {
+                    return $state;
+                } else {
+                    return implode("\n", $state);
+                }
                 // return $state ? implode("\n", json_decode($state, true)) : '';
             })->visible(fn () => $this->tableFilters['spa']['isActive']),
             Tables\Columns\TextColumn::make('area')
