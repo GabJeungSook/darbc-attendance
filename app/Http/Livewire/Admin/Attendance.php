@@ -395,7 +395,7 @@ class Attendance extends Component implements Tables\Contracts\HasTable
             ->visible(fn () => $this->tableFilters['user_middle_name']['isActive'])
             ->label('Middle Name')->searchable()
             ->sortable(),
-            Tables\Columns\BadgeColumn::make('succession_number')
+            Tables\Columns\BadgeColumn::make('succession')
                 ->colors([
                     'success'
                 ])
