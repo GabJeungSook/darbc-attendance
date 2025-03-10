@@ -400,7 +400,7 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                     'success'
                 ])
                 ->sortable()
-                ->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
+                // ->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
                 ->visible(fn () => $this->tableFilters['succession_number']['isActive'])
                 ->label('Ownership'),
             Tables\Columns\TextColumn::make('spa')
