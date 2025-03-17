@@ -124,9 +124,9 @@ class Members extends Component implements Tables\Contracts\HasTable
 
                 $this->dialog()->success(
                     $title = 'Success',
-                    $description = 'TIN Verification Status Updated Successfully'
+                    $description = 'Member Names Updated Successfully'
                 );
-            })->visible(true),
+            })->visible(false),
             Action::make('update_members')
             ->icon('heroicon-o-upload')
             ->label('Update Members')
@@ -139,9 +139,13 @@ class Members extends Component implements Tables\Contracts\HasTable
                 $member_data = $response->json();
 
                 $collection = collect($member_data);
+
+                // Fetch existing members in one query
+                $existingMembers = MembersModel::whereIn('darbc_id', $collection->pluck('darbc_id'))->get()->keyBy('darbc_id');
+
                 DB::beginTransaction();
 
-                $members = MembersModel::whereIn('darbc_id', $collection->pluck('darbc_id'))->get()->keyBy('darbc_id');
+                $updateData = [];
 
                 foreach ($collection as $item) {
                     if (!isset($item['darbc_id']) || strpos($item['darbc_id'], '.') !== false) {
@@ -149,10 +153,10 @@ class Members extends Component implements Tables\Contracts\HasTable
                     }
 
                     $darbc_id = $item['darbc_id'];
-                    $member = $members->get($darbc_id);
+                    $member = $existingMembers->get($darbc_id);
 
                     if ($member) {
-                        $updateData = [
+                        $updateData[$darbc_id] = [
                             'last_name' => $item['surname'],
                             'first_name' => $item['first_name'],
                             'middle_name' => $item['middle_name'],
@@ -168,6 +172,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                             'occupation_details' => $item['occupation_details'] ?? null,
                             'spouse' => $item['spouse'] ?? null,
                             'tin_number' => $item['tin_number'] ?? null,
+                            'tin_verification_status' => $item['tin_verification_status'] ?? null,
                             'status' => $item['status'] ?? null,
                             'blood_type' => $item['blood_type'] ?? null,
                             'children' => $item['children'] ?? null,
@@ -183,12 +188,45 @@ class Members extends Component implements Tables\Contracts\HasTable
                             'civil_status' => $item['civil_status'] ?? null,
                             'application_date' => isset($item['application_date']) ? Carbon::parse($item['application_date'])->format('Y-m-d') : null,
                         ];
-
-                        $member->update($updateData);
-                    } else {
-                        // Debug missing members
-                        dd("Member not found with darbc_id: " . $darbc_id);
                     }
+                }
+
+                // Bulk Update Members
+                foreach ($updateData as $darbc_id => $data) {
+                    MembersModel::where('darbc_id', $darbc_id)->update($data);
+                }
+
+                // Fetch member names only once
+                $url1 = 'https://darbcmembership.org/api/member-darbc-names?status=1';
+                $response1 = Http::withOptions(['verify' => false])->get($url1);
+                $member_data1 = $response1->json();
+
+                $collection1 = collect($member_data1);
+                $existingMembers1 = MembersModel::whereIn('darbc_id', $collection1->pluck('darbc_id'))->get()->keyBy('darbc_id');
+
+                $updateData1 = [];
+
+                foreach ($collection1 as $item1) {
+                    if (!isset($item1['darbc_id']) || strpos($item1['darbc_id'], '.') !== false) {
+                        continue;
+                    }
+
+                    $darbc_id1 = $item1['darbc_id'];
+                    $member1 = $existingMembers1->get($darbc_id1);
+
+                    if ($member1) {
+                        $updateData1[$darbc_id1] = [
+                            'last_name' => $item1['surname'],
+                            'first_name' => $item1['first_name'],
+                            'middle_name' => $item1['middle_name'],
+                            'succession' => $item1['succession_number'],
+                        ];
+                    }
+                }
+
+                // Bulk Update Member Names
+                foreach ($updateData1 as $darbc_id1 => $data1) {
+                    MembersModel::where('darbc_id', $darbc_id1)->update($data1);
                 }
 
                 DB::commit();
@@ -197,7 +235,6 @@ class Members extends Component implements Tables\Contracts\HasTable
                     $title = 'Success',
                     $description = 'Members Updated Successfully'
                 );
-
             }),
             Action::make('update_records')
             ->icon('heroicon-o-upload')
