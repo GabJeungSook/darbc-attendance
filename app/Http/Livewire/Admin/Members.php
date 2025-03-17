@@ -80,6 +80,53 @@ class Members extends Component implements Tables\Contracts\HasTable
                     $description = 'TIN Verification Status Updated Successfully'
                 );
             })->visible(false),
+            Action::make('update_names')
+            ->icon('heroicon-o-upload')
+            ->label('Update Member Names & Succession')
+            ->button()
+            ->color('warning')
+            ->requiresConfirmation()
+            ->action(function () {
+
+                $url = 'https://darbcmembership.org/api/member-darbc-names?status=1';
+                $response = Http::withOptions(['verify' => false])->get($url);
+                $member_data = $response->json();
+
+                $collection = collect($member_data);
+                DB::beginTransaction();
+
+                $members = MembersModel::whereIn('darbc_id', $collection->pluck('darbc_id'))->get()->keyBy('darbc_id');
+
+                foreach ($collection as $item) {
+                    if (!isset($item['darbc_id']) || strpos($item['darbc_id'], '.') !== false) {
+                        continue;
+                    }
+
+                    $darbc_id = $item['darbc_id'];
+                    $member = $members->get($darbc_id);
+
+                    if ($member) {
+                        $updateData = [
+                            'last_name' => $item['surname'],
+                            'first_name' => $item['first_name'],
+                            'middle_name' => $item['middle_name'],
+                            'succession' => $item['succession_number'],
+                        ];
+
+                        $member->update($updateData);
+                    } else {
+                        // Debug missing members
+                        dd("Member not found with darbc_id: " . $darbc_id);
+                    }
+                }
+
+                DB::commit();
+
+                $this->dialog()->success(
+                    $title = 'Success',
+                    $description = 'TIN Verification Status Updated Successfully'
+                );
+            })->visible(true),
             Action::make('update_members')
             ->icon('heroicon-o-upload')
             ->label('Update Members')
