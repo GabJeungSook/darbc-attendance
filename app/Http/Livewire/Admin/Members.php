@@ -82,7 +82,7 @@ class Members extends Component implements Tables\Contracts\HasTable
             })->visible(false),
             Action::make('update_names')
             ->icon('heroicon-o-upload')
-            ->label('Update Member Names & Succession')
+            ->label('Update Member Names & Successions')
             ->button()
             ->color('warning')
             ->requiresConfirmation()
@@ -126,7 +126,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                     $title = 'Success',
                     $description = 'Member Names Updated Successfully'
                 );
-            })->visible(false),
+            })->visible(true),
             Action::make('update_members')
             ->icon('heroicon-o-upload')
             ->label('Update Members')
@@ -197,37 +197,36 @@ class Members extends Component implements Tables\Contracts\HasTable
                 }
 
                 // Fetch member names only once
-                $url1 = 'https://darbcmembership.org/api/member-darbc-names?status=1';
-                $response1 = Http::withOptions(['verify' => false])->get($url1);
-                $member_data1 = $response1->json();
+                // $url1 = 'https://darbcmembership.org/api/member-darbc-names?status=1';
+                // $response1 = Http::withOptions(['verify' => false])->get($url1);
+                // $member_data1 = $response1->json();
 
-                $collection1 = collect($member_data1);
-                $existingMembers1 = MembersModel::whereIn('darbc_id', $collection1->pluck('darbc_id'))->get()->keyBy('darbc_id');
+                // $collection1 = collect($member_data1);
+                // $existingMembers1 = MembersModel::whereIn('darbc_id', $collection1->pluck('darbc_id'))->get()->keyBy('darbc_id');
 
-                $updateData1 = [];
+                // $updateData1 = [];
 
-                foreach ($collection1 as $item1) {
-                    if (!isset($item1['darbc_id']) || strpos($item1['darbc_id'], '.') !== false) {
-                        continue;
-                    }
+                // foreach ($collection1 as $item1) {
+                //     if (!isset($item1['darbc_id']) || strpos($item1['darbc_id'], '.') !== false) {
+                //         continue;
+                //     }
 
-                    $darbc_id1 = $item1['darbc_id'];
-                    $member1 = $existingMembers1->get($darbc_id1);
+                //     $darbc_id1 = $item1['darbc_id'];
+                //     $member1 = $existingMembers1->get($darbc_id1);
 
-                    if ($member1) {
-                        $updateData1[$darbc_id1] = [
-                            'last_name' => $item1['surname'],
-                            'first_name' => $item1['first_name'],
-                            'middle_name' => $item1['middle_name'],
-                            'succession' => $item1['succession_number'],
-                        ];
-                    }
-                }
+                //     if ($member1) {
+                //         $updateData1[$darbc_id1] = [
+                //             'last_name' => $item1['surname'],
+                //             'first_name' => $item1['first_name'],
+                //             'middle_name' => $item1['middle_name'],
+                //             'succession' => $item1['succession_number'],
+                //         ];
+                //     }
+                // }
 
-                // Bulk Update Member Names
-                foreach ($updateData1 as $darbc_id1 => $data1) {
-                    MembersModel::where('darbc_id', $darbc_id1)->update($data1);
-                }
+                // foreach ($updateData1 as $darbc_id1 => $data1) {
+                //     MembersModel::where('darbc_id', $darbc_id1)->update($data1);
+                // }
 
                 DB::commit();
 
