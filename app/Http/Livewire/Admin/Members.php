@@ -168,6 +168,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                             'occupation_details' => $item['occupation_details'] ?? null,
                             'spouse' => $item['spouse'] ?? null,
                             'tin_number' => $item['tin_number'] ?? null,
+                            'tin_verification_status' => $item['tin_verification_status'] ?? null,
                             'status' => $item['status'] ?? null,
                             'blood_type' => $item['blood_type'] ?? null,
                             'children' => $item['children'] ?? null,
