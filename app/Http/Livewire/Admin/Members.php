@@ -111,6 +111,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                             'first_name' => $item['first_name'],
                             'middle_name' => $item['middle_name'],
                             'succession' => $item['succession_number'],
+                            'tin_verification_status' => $item['tin_verification_status'],
                         ];
 
                         $member->update($updateData);
