@@ -106,12 +106,22 @@ class Members extends Component implements Tables\Contracts\HasTable
                     $member = $members->get($darbc_id);
 
                     if ($member) {
+                        $status = $item['rsbsa_record_id'] != null ? 'REGISTERED' : 'UNREGISTERED';
+                        $is_complete = $item['has_missing_details'] == 0 ? 'COMPLETE' : 'INCOMPLETE';
+
+                        //if member status is registered and has missing details, update the rsbsa status to incomplete
+                        if ($status == 'REGISTERED' && $is_complete == 'INCOMPLETE') {
+                            $rsbsa_status = 'INCOMPLETE';
+                        } else {
+                            $rsbsa_status = $status;
+                        }
                         $updateData = [
                             'last_name' => $item['surname'],
                             'first_name' => $item['first_name'],
                             'middle_name' => $item['middle_name'],
                             'succession' => $item['succession_number'],
                             'tin_verification_status' => $item['tin_verification_status'],
+                            'rsbsa_status' => $rsbsa_status,
                         ];
 
                         $member->update($updateData);
@@ -310,6 +320,9 @@ class Members extends Component implements Tables\Contracts\HasTable
             Filter::make('tin_verification_status')
                 ->label('TIN Verification Status')
                 ->default(),
+            Filter::make('rsbsa_status')
+                ->label('RSBSA Status')
+                ->default(),
         ];
     }
 
@@ -492,6 +505,10 @@ class Members extends Component implements Tables\Contracts\HasTable
             Tables\Columns\TextColumn::make('tin_verification_status')
             ->visible(fn () => $this->tableFilters['tin_verification_status']['isActive'])
             ->label('TIN Verification Status')
+            ->sortable(),
+            Tables\Columns\TextColumn::make('rsbsa_status')
+            ->visible(fn () => $this->tableFilters['rsbsa_status']['isActive'])
+            ->label('RSBSA Status')
             ->sortable(),
         ];
     }
