@@ -352,6 +352,22 @@ class Members extends Component implements Tables\Contracts\HasTable
                 Forms\Components\TextInput::make('area')->label("Area")->required(),
             ])
             ->requiresConfirmation(),
+            EditAction::make('edit_status')
+            ->icon('heroicon-o-pencil')
+            ->label('Update RSBSA Status')
+            ->button()
+            ->outlined()
+            ->color('success')
+            ->after(function () {
+                $this->dialog()->success(
+                    $title = 'Success',
+                    $description = 'Updated Successfully'
+                );
+            })
+            ->form([
+                Forms\Components\Select::make('rsbsa_status')->label("RSBSA Status")->required(),
+            ])
+            ->requiresConfirmation(),
         ];
     }
 
