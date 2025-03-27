@@ -365,7 +365,12 @@ class Members extends Component implements Tables\Contracts\HasTable
                 );
             })
             ->form([
-                Forms\Components\Select::make('rsbsa_status')->label("RSBSA Status")->required(),
+                Forms\Components\Select::make('rsbsa_status')->label("RSBSA Status")
+                ->options([
+                    'REGISTERED' => 'REGISTERED',
+                    'UNREGISTERED' => 'UNREGISTERED',
+                    'INCOMPLETE' => 'INCOMPLETE',
+                ])->required(),
             ])
             ->requiresConfirmation(),
         ];
