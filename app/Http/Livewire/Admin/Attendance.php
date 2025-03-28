@@ -222,7 +222,7 @@ class Attendance extends Component implements Tables\Contracts\HasTable
                     }
                 })->visible(function  ($record) {
                         $attendance = AttendanceModel::where('member_id', $record->id)->where('event_id', $this->event->id)->first();
-                        if ($attendance || $this->event->has_giveaway == false) {
+                        if ($attendance || $this->event->has_giveaway == false || $record->is_restricted === true) {
                             return false;
                         } else {
                             return true;

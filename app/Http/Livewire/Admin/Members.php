@@ -2,20 +2,22 @@
 
 namespace App\Http\Livewire\Admin;
 
-use Livewire\Component;
+use DB;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Members as MembersModel;
+use Livewire\Component;
 use App\Models\Attendance;
-use Carbon\Carbon;
 use WireUi\Traits\Actions;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\Layout;
 use Illuminate\Support\Facades\Http;
-use Filament\Tables\Filters\Filter;
-use DB;
+use App\Models\Members as MembersModel;
+use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Actions\EditAction;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class Members extends Component implements Tables\Contracts\HasTable
 {
@@ -374,6 +376,7 @@ class Members extends Component implements Tables\Contracts\HasTable
                 ])->required(),
             ])
             ->requiresConfirmation(),
+
         ];
     }
 
@@ -402,14 +405,15 @@ class Members extends Component implements Tables\Contracts\HasTable
                     'success'
                 ])
                 ->sortable()
-                ->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
+                //->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
                 ->visible(fn () => $this->tableFilters['succession_number']['isActive'])
                 ->label('Ownership'),
             Tables\Columns\TextColumn::make('spa')
             ->label('SPA/Representatives')->sortable()->searchable()
-            ->formatStateUsing(function ($state) {
-                return $state ? implode("\n", json_decode($state, true)) : '';
-            })->visible(fn () => $this->tableFilters['spa']['isActive']),
+            // ->formatStateUsing(function ($state) {
+            //     return $state ? implode("\n", json_decode($state, true)) : '';
+            // })
+            ->visible(fn () => $this->tableFilters['spa']['isActive']),
             Tables\Columns\TextColumn::make('area')
             ->visible(fn () => $this->tableFilters['area']['isActive'])
             ->label('Area')->sortable()->searchable(),
@@ -531,6 +535,10 @@ class Members extends Component implements Tables\Contracts\HasTable
             Tables\Columns\TextColumn::make('rsbsa_status')
             ->visible(fn () => $this->tableFilters['rsbsa_status']['isActive'])
             ->label('RSBSA Status')
+            ->sortable(),
+            Tables\Columns\ToggleColumn::make('is_restricted')
+            ->label('Restrict Member')
+            //->visible(fn () => $this->tableFilters['rsbsa_status']['isActive'])
             ->sortable(),
         ];
     }
