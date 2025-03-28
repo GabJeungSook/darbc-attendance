@@ -372,7 +372,8 @@ class Members extends Component implements Tables\Contracts\HasTable
                     'REGISTERED' => 'REGISTERED',
                     'UNREGISTERED' => 'UNREGISTERED',
                     'INCOMPLETE' => 'INCOMPLETE',
-                    'COMPLETE' => 'COMPLETE'
+                    'COMPLETE' => 'COMPLETE',
+                    'MISSING DOCUMENTS' => 'MISSING DOCUMENTS',
                 ])->required(),
             ])
             ->requiresConfirmation(),
