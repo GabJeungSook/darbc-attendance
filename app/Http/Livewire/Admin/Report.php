@@ -58,7 +58,7 @@ class Report extends Component
             $query->whereDate('created_at', '>=', $this->from_date)
                     ->whereDate('created_at', '<=', $this->to_date);
         })
-        ->get();
+        ->paginate(100);
         return view('livewire.admin.report', [
             'events' => Event::orderBy('event_status', 'desc')->get(),
             'attendance' => $this->attendance,
