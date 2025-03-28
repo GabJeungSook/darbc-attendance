@@ -405,14 +405,14 @@ class Members extends Component implements Tables\Contracts\HasTable
                     'success'
                 ])
                 ->sortable()
-                //->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
+                ->formatStateUsing(fn ($state) => $state == 0 ? 'Original' : $this->ordinal($state) . ' Successor')
                 ->visible(fn () => $this->tableFilters['succession_number']['isActive'])
                 ->label('Ownership'),
             Tables\Columns\TextColumn::make('spa')
             ->label('SPA/Representatives')->sortable()->searchable()
-            // ->formatStateUsing(function ($state) {
-            //     return $state ? implode("\n", json_decode($state, true)) : '';
-            // })
+            ->formatStateUsing(function ($state) {
+                return $state ? implode("\n", json_decode($state, true)) : '';
+            })
             ->visible(fn () => $this->tableFilters['spa']['isActive']),
             Tables\Columns\TextColumn::make('area')
             ->visible(fn () => $this->tableFilters['area']['isActive'])
