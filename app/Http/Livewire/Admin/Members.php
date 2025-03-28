@@ -412,7 +412,12 @@ class Members extends Component implements Tables\Contracts\HasTable
             Tables\Columns\TextColumn::make('spa')
             ->label('SPA/Representatives')->sortable()->searchable()
             ->formatStateUsing(function ($state) {
-                return $state ? implode("\n", json_decode($state, true)) : '';
+                $decodedState = json_decode($state, true);
+                if (is_array($decodedState)) {
+                    return implode("\n", $decodedState);
+                }
+                
+                return '';
             })
             ->visible(fn () => $this->tableFilters['spa']['isActive']),
             Tables\Columns\TextColumn::make('area')
