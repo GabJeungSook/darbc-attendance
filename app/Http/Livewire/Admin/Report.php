@@ -20,6 +20,24 @@ class Report extends Component
     public function mount()
     {
         $this->event = Event::where('event_status', true)->first();
+
+        $this->attendance = Attendance::when($this->selected_event, function ($query) {
+            $query->where('event_id', $this->selected_event);
+        })
+        ->when($this->search_query, function ($query) {
+            $query->whereHas('member', function ($query) {
+                $query->where('last_name', 'like', '%'.$this->search_query.'%')
+                ->orWhere('first_name', 'like', '%'.$this->search_query.'%')
+                ->orWhere('darbc_id', 'like', '%'.$this->search_query.'%');
+            });
+
+
+        })
+        ->when($this->from_date && $this->to_date, function ($query) {
+            $query->whereDate('created_at', '>=', $this->from_date)
+                    ->whereDate('created_at', '<=', $this->to_date);
+        })
+        ->paginate(100);
     }
 
     public function updatedSelectedEvent($value)
@@ -42,21 +60,7 @@ class Report extends Component
 
     public function render()
     {
-        $this->attendance = Attendance::when(!is_null($this->selected_event), function ($query) {
-            $query->where('event_id', $this->selected_event);
-        })
-        ->when(!empty($this->search_query), function ($query) {
-            $query->whereHas('member', function ($query) {
-                $query->where('last_name', 'like', '%'.$this->search_query.'%')
-                ->orWhere('first_name', 'like', '%'.$this->search_query.'%')
-                ->orWhere('darbc_id', 'like', '%'.$this->search_query.'%');
-            });
-        })
-        ->when(!empty($this->from_date) && !empty($this->to_date), function ($query) {
-            $query->whereDate('created_at', '>=', $this->from_date)
-                  ->whereDate('created_at', '<=', $this->to_date);
-        })
-        ->paginate(100);
+
         return view('livewire.admin.report', [
             'events' => Event::orderBy('event_status', 'desc')->get(),
             'attendance' => $this->attendance,
