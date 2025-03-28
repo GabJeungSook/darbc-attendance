@@ -545,6 +545,15 @@ class Attendance extends Component implements Tables\Contracts\HasTable
             ->visible(fn () => $this->tableFilters['rsbsa_status']['isActive'])
             ->label('RSBSA Status')
             ->sortable(),
+            Tables\Columns\BadgeColumn::make('is_restricted')
+            ->enum([
+                0 => 'Not Restricted',
+                1 => 'Restricted',
+            ])
+            ->colors([
+                'success' => 'Not Restricted',
+                'danger' => 'Restricted',
+            ])
         ];
     }
 
